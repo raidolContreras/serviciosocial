@@ -103,7 +103,7 @@ if (isset($_POST['search'])) {
                 $correoInstitucional = $_POST['correoInstitucional'];
                 $telefonoContacto = $_POST['telefonoContacto'];
                 $telefonoEmergencia = $_POST['telefonoEmergencia'];
-                $parentesco = ($_POST['parentesco'] == 'Otro') ? $_POST['parentesco'] : $_POST['otroParentesco'];
+                $parentesco = ($_POST['parentesco'] != 'Otro') ? $_POST['parentesco'] : $_POST['otroParentesco'];
 
                 // Aquí puedes agregar el resto de los campos
                 $calle = $_POST['calle'];
@@ -115,6 +115,7 @@ if (isset($_POST['search'])) {
                 $mesNacimiento = $_POST['mesNacimiento'];
                 $anioNacimiento = $_POST['anioNacimiento'];
                 $genero = $_POST['genero'];
+                $tipoPractica = $_POST['tipoPractica'];
 
                 $data = array(
                     'matricula' => $matricula,
@@ -136,7 +137,8 @@ if (isset($_POST['search'])) {
                     'diaNacimiento' => $diaNacimiento,
                     'mesNacimiento' => $mesNacimiento,
                     'anioNacimiento' => $anioNacimiento,
-                    'genero' => $genero
+                    'genero' => $genero,
+                    'type' => $tipoPractica
                 );
 
                 $students = $searchStudents->ctrRegisterStudent($data);
@@ -248,6 +250,13 @@ if (isset($_POST['search'])) {
         $searchStudentEvents = new FormsController();
         $studentEvents = $searchStudentEvents->ctrStudentEventsPoints($student);
         echo json_encode($studentEvents);
+    }
+} else if (isset($_POST['action'])) {
+    if ($_POST['action'] == 'checkMatricula') {
+        $matricula = $_POST['matricula'];
+        $checkMatricula = new SilController();
+        $response = $checkMatricula->ctrSearchStudentSIL($matricula);
+        echo json_encode($response);
     }
 }
 

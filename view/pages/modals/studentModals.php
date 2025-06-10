@@ -249,7 +249,7 @@
 <div class="modal fade" id="editStudentModal" tabindex="-1" role="dialog" aria-labelledby="editStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header bg-primary">
+            <div class="modal-header">
                 <h5 class="modal-title" id="editStudentModalLabel">Editar Estudiante</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</button>
             </div>

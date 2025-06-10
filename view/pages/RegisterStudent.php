@@ -3,11 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Registro de Estudiante</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 y FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary: #01643D;
+            --primary-dark: #1B4434;
+        }
+
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,461 +21,449 @@
 
         .container {
             max-width: 800px;
-            margin: 50px auto;
-            padding: 15px;
+            margin: 3rem auto;
         }
 
         .card {
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #dee2e6;
-        }
-
-        .card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            border-radius: .75rem;
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
         }
 
         .card-header {
-            border-radius: 15px 15px 0 0 !important;
-            background-color: #01643D;
-            color: white;
-            border-bottom: 1px solid #dee2e6;
-            font-size: 1.8rem;
-            font-weight: bold;
-            padding: 20px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: .75rem .75rem 0 0;
+            font-size: 1.5rem;
+            text-align: center;
         }
 
-        .card-body {
-            padding: 30px;
-            background-color: white;
+        .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
         }
 
         .btn-primary:hover {
-            color: #fff;
-            background-color: #01643D; 
-            border-color: #01643D;
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
         }
 
-        .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
-            color: #fff;
-            background-color: #1b4434;
-            border-color: #01643D;
-        }
-
-        .btn-primary.focus, .btn-primary:focus {
-            color: #fff;
-            background-color: #01643D;
-            border-color: #01643D;
-            box-shadow: 0px 0px 17px 0px rgba(10,102,39,0.18);
-        }
-
-        .tooltip-inner {
-            max-width: 200px;
-            width: 200px;
-        }
-
-        .text-center img {
-            margin-bottom: 20px;
-        }
-
-        .alert {
-            display: none;
+        .toast-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1050;
-            padding: 15px;
-            border: 1px solid transparent;
-            border-radius: 10px;
-            transition: all 0.5s ease-in-out;
-            width: 300px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-
-        .alert-success {
-            background-color: #e6f4ea;
-            border-left: 5px solid #28a745;
-            color: #155724;
-        }
-
-        .alert-danger {
-            background-color: #f8d7da;
-            border-left: 5px solid #dc3545;
-            color: #721c24;
-        }
-
-        .alert .close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: inherit;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-        }
-
-        .alert .alert-icon {
-            font-size: 1.5rem;
-            margin-right: 10px;
-        }
-
-        .alert-show {
-            display: block !important;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .alert-hide {
-            opacity: 0;
-            transform: translateY(-20px);
+            top: 1rem;
+            right: 1rem;
+            z-index: 1080;
         }
     </style>
 </head>
 
 <body>
+
     <div class="container">
-        <div class="text-center">
-            <img src="view/assets/images/logo-color.png" alt="Logo de Unimo" class="img-fluid" style="max-width: 10em;">
+        <div class="text-center mb-4">
+            <img src="view/assets/images/logo-color.png" alt="Logo de Unimo" class="img-fluid" style="max-width: 10rem;">
         </div>
+
         <div class="card">
-            <div class="card-header text-center">
-                Registro de Estudiante
-            </div>
-            <div class="card-body"><form id="registerStudentForm">
-    <div class="step" id="step-1">
-        <h4>Paso 1: Información Personal</h4>
-        <div class="form-row">
-            <div class="col-md-6 form-group position-relative">
-                <label for="matricula" class="form-label">Matrícula *<i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="Ingresa tu matrícula de estudiante"></i></label>
-                <input type="text" class="form-control" id="matricula" name="matricula" placeholder="Ingresa tu matrícula" required>
-                <div class="invalid-feedback">La matrícula debe contener solo números.</div>
-                <div class="valid-feedback">Matrícula válida.</div>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="nombre" class="form-label">Nombre *</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="apellidoPaterno" class="form-label">Apellido paterno *</label>
-                <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno" placeholder="Ingresa tu apellido paterno" required>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="apellidoMaterno" class="form-label">Apellido materno</label>
-                <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno" placeholder="Ingresa tu apellido materno">
-            </div>
-            <div class="col-md-3 form-group">
-                <label for="diaNacimiento" class="form-label">Día de nacimiento *</label>
-                <input type="number" class="form-control" id="diaNacimiento" name="diaNacimiento" placeholder="Día" min="1" max="31" required>
-            </div>
-            <div class="col-md-3 form-group">
-                <label for="mesNacimiento" class="form-label">Mes de nacimiento *</label>
-                <input type="number" class="form-control" id="mesNacimiento" name="mesNacimiento" placeholder="Mes" min="1" max="12" required>
-            </div>
-            <div class="col-md-3 form-group">
-                <label for="anioNacimiento" class="form-label">Año de nacimiento *</label>
-                <select name="anioNacimiento" id="anioNacimiento" class="form-select" required>
-                    <option value="">Seleccione un año</option>
-                    <?php for ($i = date('Y'); $i >= 1970; $i--) {?>
-                        <option value="<?php echo $i;?>"><?php echo $i;?></option>
-                    <?php }?>
-                </select>
-            </div>
-            <div class="col-md-3 form-group">
-                <label for="genero" class="form-label">Género *</label>
-                <select class="form-select" id="genero" name="genero" required>
-                    <option value="1">Masculino</option>
-                    <option value="2">Femenino</option>
-                    <option value="0">Otro</option>
-                </select>
+            <div class="card-header">Registro de Estudiante</div>
+            <div class="card-body">
+                <form id="registerStudentForm" class="needs-validation" novalidate>
+                    <!-- Paso 1 -->
+                    <div class="step" data-step="0">
+                        <h5>Paso 1: Información Personal</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6 position-relative">
+                                <label for="matricula" class="form-label">
+                                    Matrícula *
+                                    <i class="fas fa-question-circle text-muted" data-bs-toggle="tooltip" title="Ingresa tu matrícula de estudiante"></i>
+                                </label>
+                                <input type="text" class="form-control" id="matricula" name="matricula" required pattern="\d+">
+                                <div class="invalid-feedback">La matrícula debe contener solo números.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                <div class="invalid-feedback">Este campo es obligatorio.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="apellidoPaterno" class="form-label">Apellido paterno *</label>
+                                <input type="text" class="form-control" id="apellidoPaterno" name="apellidoPaterno" required>
+                                <div class="invalid-feedback">Este campo es obligatorio.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="apellidoMaterno" class="form-label">Apellido materno</label>
+                                <input type="text" class="form-control" id="apellidoMaterno" name="apellidoMaterno">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="diaNacimiento" class="form-label">Día *</label>
+                                <input type="number" class="form-control" id="diaNacimiento" name="diaNacimiento" min="1" max="31" required>
+                                <div class="invalid-feedback">Ingresa un día válido.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="mesNacimiento" class="form-label">Mes *</label>
+                                <input type="number" class="form-control" id="mesNacimiento" name="mesNacimiento" min="1" max="12" required>
+                                <div class="invalid-feedback">Ingresa un mes válido.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="anioNacimiento" class="form-label">Año *</label>
+                                <select class="form-select" id="anioNacimiento" name="anioNacimiento" required>
+                                    <option value="" selected disabled>Seleccione un año</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona un año.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="genero" class="form-label">Género *</label>
+                                <select class="form-select" id="genero" name="genero" required>
+                                    <option value="" selected disabled>Selecciona</option>
+                                    <option value="1">Masculino</option>
+                                    <option value="2">Femenino</option>
+                                    <option value="0">Otro</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona un género.</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary next-btn">Siguiente</button>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div class="step d-none" data-step="1">
+                        <h5>Paso 2: Datos Académicos y Contacto</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="licenciatura" class="form-label">Licenciatura *</label>
+                                <select class="form-select" id="licenciatura" name="licenciatura" required>
+                                    <option value="" selected>Seleccione licenciatura</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona una licenciatura.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tipoLicenciatura" class="form-label">Tipo *</label>
+                                <select class="form-select" id="tipoLicenciatura" name="tipoLicenciatura" required>
+                                    <option value="" selected disabled>Selecciona</option>
+                                    <option value="semestral">Semestral</option>
+                                    <option value="cuatrimestral">Cuatrimestral</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona un tipo.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="grado" class="form-label">Grado *</label>
+                                <input type="number" class="form-control" id="grado" name="grado" required>
+                                <div class="invalid-feedback">Ingresa tu grado.</div>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label for="correoInstitucional" class="form-label">
+                                    Correo Institucional *
+                                    <i class="fas fa-question-circle text-muted" data-bs-toggle="tooltip" title="Debe ser @unimontrer.edu.mx"></i>
+                                </label>
+                                <input type="email" class="form-control" id="correoInstitucional" name="correoInstitucional" required>
+                                <div class="invalid-feedback">El correo debe ser @unimontrer.edu.mx.</div>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label for="telefonoContacto" class="form-label">
+                                    Celular *
+                                    <i class="fas fa-question-circle text-muted" data-bs-toggle="tooltip" title="10 dígitos"></i>
+                                </label>
+                                <input type="tel" class="form-control" id="telefonoContacto" name="telefonoContacto" required pattern="\d{10}">
+                                <div class="invalid-feedback">Debe contener 10 dígitos.</div>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label for="telefonoEmergencia" class="form-label">
+                                    Emergencia *
+                                    <i class="fas fa-question-circle text-muted" data-bs-toggle="tooltip" title="10 dígitos"></i>
+                                </label>
+                                <input type="tel" class="form-control" id="telefonoEmergencia" name="telefonoEmergencia" required pattern="\d{10}">
+                                <div class="invalid-feedback">Debe contener 10 dígitos.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="parentesco" class="form-label">Parentesco *</label>
+                                <select class="form-select" id="parentesco" name="parentesco" required>
+                                    <option value="" selected disabled>Selecciona</option>
+                                    <option value="Padre">Padre</option>
+                                    <option value="Madre">Madre</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                                <div class="invalid-feedback">Selecciona un parentesco.</div>
+                            </div>
+                            <div class="col-md-6 d-none" id="parentescoEspecificar">
+                                <label for="otroParentesco" class="form-label">Especificar *</label>
+                                <input type="text" class="form-control" id="otroParentesco" name="otroParentesco">
+                                <div class="invalid-feedback">Especifica el parentesco.</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary prev-btn">Anterior</button>
+                        <button type="button" class="btn btn-primary next-btn">Siguiente</button>
+                    </div>
+
+                    <!-- Paso 3 -->
+                    <div class="step d-none" data-step="2">
+                        <h5>Paso 3: Dirección</h5>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="calle" class="form-label">Calle *</label>
+                                <input type="text" class="form-control" id="calle" name="calle" required>
+                                <div class="invalid-feedback">Ingresa tu calle.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="numeroExterior" class="form-label">Ext. *</label>
+                                <input type="text" class="form-control" id="numeroExterior" name="numeroExterior" required>
+                                <div class="invalid-feedback">Ingresa el número exterior.</div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="numeroInterior" class="form-label">Int.</label>
+                                <input type="text" class="form-control" id="numeroInterior" name="numeroInterior">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="colonia" class="form-label">Colonia *</label>
+                                <input type="text" class="form-control" id="colonia" name="colonia" required>
+                                <div class="invalid-feedback">Ingresa tu colonia.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="codigoPostal" class="form-label">CP *</label>
+                                <input type="text" class="form-control" id="codigoPostal" name="codigoPostal" required>
+                                <div class="invalid-feedback">Ingresa el código postal.</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary prev-btn">Anterior</button>
+                        <button type="button" class="btn btn-primary next-btn">Siguiente</button>
+                    </div>
+
+                    <!-- Paso 4 -->
+                    <div class="step d-none" data-step="3">
+                        <h5>Paso 4: Tipo de Prácticas</h5>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipoPractica" id="opcionUniv" value="universidad" required>
+                                <label class="form-check-label" for="opcionUniv">Directo con la Universidad</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tipoPractica" id="opcionEmp" value="empresa">
+                                <label class="form-check-label" for="opcionEmp">Con Empresa Foránea</label>
+                            </div>
+                            <div class="invalid-feedback">Selecciona una opción.</div>
+                        </div>
+                        <button type="button" class="btn btn-secondary prev-btn">Anterior</button>
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    </div>
+                </form>
             </div>
         </div>
-        <button type="button" class="btn btn-primary next-step">Siguiente</button>
     </div>
 
-    <div class="step d-none" id="step-2">
-        <h4>Paso 2: Datos Académicos y Contacto</h4>
-        <div class="form-row">
-            <div class="col-md-6 form-group">
-                <label for="licenciatura" class="form-label">Licenciatura *</label>
-                <select class="form-select" id="licenciatura" name="licenciatura" required>
-                </select>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="tipoLicenciatura" class="form-label">Tipo de Licenciatura *</label>
-                <select class="form-select" id="tipoLicenciatura" name="tipoLicenciatura" required>
-                    <option value="semestral">Semestral</option>
-                    <option value="cuatrimestral">Cuatrimestral</option>
-                </select>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="grado" class="form-label">Grado *</label>
-                <input type="number" class="form-control" id="grado" name="grado" placeholder="Ingresa tu grado" required>
-            </div>
-            <div class="col-md-6 form-group position-relative">
-                <label for="correoInstitucional" class="form-label">Correo Institucional *<i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="Debe ser de la forma @unimontrer.edu.mx"></i></label>
-                <input type="email" class="form-control" id="correoInstitucional" name="correoInstitucional" placeholder="correo@unimontrer.edu.mx" required>
-                <div class="invalid-feedback">El correo debe ser de la forma @unimontrer.edu.mx.</div>
-                <div class="valid-feedback">Correo válido.</div>
-            </div>
-            <div class="col-md-6 form-group position-relative">
-                <label for="telefonoContacto" class="form-label">Celular del alumno *<i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="Debe contener 10 dígitos"></i></label>
-                <input type="tel" class="form-control" id="telefonoContacto" name="telefonoContacto" placeholder="Ingresa tu teléfono de contacto" required>
-                <div class="invalid-feedback">El teléfono de contacto debe contener 10 dígitos.</div>
-                <div class="valid-feedback">Teléfono válido.</div>
-            </div>
-            <div class="col-md-6 form-group position-relative">
-                <label for="telefonoEmergencia" class="form-label">Teléfono de Emergencia *<i class="fas fa-question-circle" data-toggle="tooltip" data-placement="top" title="Debe contener 10 dígitos"></i></label>
-                <input type="tel" class="form-control" id="telefonoEmergencia" name="telefonoEmergencia" placeholder="Ingresa tu teléfono de emergencia" required>
-                <div class="invalid-feedback">El teléfono de emergencia debe contener 10 dígitos.</div>
-                <div class="valid-feedback">Teléfono válido.</div>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="parentesco" class="form-label">Parentesco *</label>
-                <select class="form-select" id="parentesco" name="parentesco" required>
-                    <option value="Padre">Padre</option>
-                    <option value="Madre">Madre</option>
-                    <option value="Otro">Otro</option>
-                </select>
-            </div>
-            <div class="col-md-6 form-group d-none" id="parentescoEspecificar">
-                <label for="otroParentesco" class="form-label">Especificar Parentesco</label>
-                <input type="text" class="form-control" id="otroParentesco" name="otroParentesco" placeholder="Especifica el parentesco">
+    <!-- Toasts -->
+    <div class="toast-container">
+        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">¡Éxito! Datos registrados.</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         </div>
-        <button type="button" class="btn btn-secondary prev-step">Anterior</button>
-        <button type="button" class="btn btn-primary next-step">Siguiente</button>
-    </div>
-
-    <div class="step d-none" id="step-3">
-        <h4>Paso 3: Dirección</h4>
-        <div class="form-row">
-            <div class="col-md-6 form-group">
-                <label for="calle" class="form-label">Calle *</label>
-                <input type="text" class="form-control" id="calle" name="calle" placeholder="Ingresa tu calle" required>
-            </div>
-            <div class="col-md-3 form-group">
-                <label for="numeroExterior" class="form-label">Número Exterior *</label>
-                <input type="text" class="form-control" id="numeroExterior" name="numeroExterior" placeholder="Ingresa tu número exterior" required>
-            </div>
-            <div class="col-md-3 form-group">
-                <label for="numeroInterior" class="form-label">Número Interior</label>
-                <input type="text" class="form-control" id="numeroInterior" name="numeroInterior" placeholder="Ingresa tu número interior">
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="colonia" class="form-label">Fraccionamiento/Colonia *</label>
-                <input type="text" class="form-control" id="colonia" name="colonia" placeholder="Ingresa tu colonia" required>
-            </div>
-            <div class="col-md-6 form-group">
-                <label for="codigoPostal" class="form-label">Código Postal *</label>
-                <input type="text" class="form-control" id="codigoPostal" name="codigoPostal" placeholder="Ingresa tu código postal" required>
+        <div id="duplicateToast" class="toast align-items-center text-bg-warning border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">¡Atención! Alumno ya registrado.</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
         </div>
-        <button type="button" class="btn btn-secondary prev-step mb-2">Anterior</button>
-        <button type="submit" class="btn btn-primary w-100" id="submitBtn">Registrar</button>
+        <div id="errorToast" class="toast align-items-center text-bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">Ocurrió un error. Intenta de nuevo.</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
     </div>
-</form>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        let currentStep = 0;
-        const steps = document.querySelectorAll('.step');
-        const nextBtns = document.querySelectorAll('.next-step');
-        const prevBtns = document.querySelectorAll('.prev-step');
+    <!-- Bootstrap Bundle (Popper incluido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Inicializaciones
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el =>
+            new bootstrap.Tooltip(el)
+        );
 
-        function showStep(stepIndex) {
-            steps.forEach((step, index) => {
-                step.classList.toggle('d-none', index !== stepIndex);
-            });
+        // Rellenar años
+        const yearSel = document.getElementById('anioNacimiento');
+        for (let y = new Date().getFullYear(); y >= 1970; y--) {
+            yearSel.add(new Option(y, y));
         }
 
-        nextBtns.forEach(btn => {
-            btn.addEventListener('click', function () {
-                if (currentStep < steps.length - 1) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
-            });
-        });
-
-        prevBtns.forEach(btn => {
-            btn.addEventListener('click', function () {
-                if (currentStep > 0) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
-        });
-
-        showStep(currentStep);
-    });
-</script>
-
-
-                <div class="alert alert-success mt-3 alert-hide" id="successMessage">
-                    <button type="button" class="close" onclick="hideAlert('successMessage')">&times;</button>
-                    <i class="fas fa-check-circle alert-icon"></i>
-                    ¡Éxito!
-                    <p>Se registraron tus datos de manera correcta</p>
-                </div>
-                <div class="alert alert-danger mt-3 alert-hide" id="errorMessage">
-                    <button type="button" class="close" onclick="hideAlert('errorMessage')">&times;</button>
-                    <i class="fas fa-times-circle alert-icon"></i>
-                    Error
-                    <p>No se puedo crear al alumno</p>
-                </div>
-                <div class="alert alert-warning mt-3 alert-hide" id="duplicateMessage">
-                    <button type="button" class="close" onclick="hideAlert('duplicateMessage')">&times;</button>
-                    <i class="fas fa-exclamation-circle alert-icon"></i>
-                    Duplicado
-                    <p>Alumno ya registrado en el sistema</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            licenciatura();
-            $('[data-toggle="tooltip"]').tooltip();
-
-            const phoneRegex = /^\d{10}$/;
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@unimontrer\.edu\.mx$/;
-
-            $('#matricula').on('input', function () {
-                const matricula = $(this).val();
-                if (!/^\d+$/.test(matricula)) {
-                    $(this).addClass('is-invalid').removeClass('is-valid');
-                } else {
-                    $(this).addClass('is-valid').removeClass('is-invalid');
-                }
-            });
-
-            $('#correoInstitucional').on('input', function () {
-                const correoInstitucional = $(this).val();
-                if (!emailRegex.test(correoInstitucional)) {
-                    $(this).addClass('is-invalid').removeClass('is-valid');
-                } else {
-                    $(this).addClass('is-valid').removeClass('is-invalid');
-                }
-            });
-
-            $('#telefonoContacto, #telefonoEmergencia').on('input', function () {
-                const telefono = $(this).val();
-                if (!phoneRegex.test(telefono)) {
-                    $(this).addClass('is-invalid').removeClass('is-valid');
-                } else {
-                    $(this).addClass('is-valid').removeClass('is-invalid');
-                }
-            });
-
-            $('#parentesco').on('change', function () {
-                if ($(this).val() === 'Otro') {
-                    $('#parentescoEspecificar').removeClass('d-none').addClass('d-block');
-                    $('#otroParentesco').prop('required', true); // Hacer el campo requerido
-                } else {
-                    $('#parentescoEspecificar').removeClass('d-block').addClass('d-none');
-                    $('#otroParentesco').prop('required', false); // Eliminar el requerimiento
-                }
-            });
-
-            $('#registerStudentForm').on('submit', function (event) {
-                event.preventDefault();
-                if (validateForm()) {
-                    $('#successMessage').hide();
-                    $('#errorMessage').hide();
-                    $('#duplicateMessage').hide();
-                    const submitBtn = $('#submitBtn');
-                    submitBtn.prop('disabled', true).addClass('btn-loading').text('Enviando');
-
-                    var formData = $(this).serializeArray(); // Serializa el formulario a un array de objetos
-                    formData.push({ name: 'search', value: 'student' });
-                    formData.push({ name: 'action', value: 'addStudent' });
-
-                    $.ajax({
-                        url: 'controller/ajax/ajax.forms.php',
-                        method: 'POST',
-                        data: formData,
-                        success: function (response) {
-                            submitBtn.prop('disabled', false).removeClass('btn-loading').text('Registrar');
-                            if (response === '"success"') {
-                                showAlert('successMessage');
-                            } else if (response === '"duplicate"') {
-                                showAlert('duplicateMessage');
-                            } else {
-                                showAlert('errorMessage');
-                            }
-                        }
-                    });
-                }
-            });
-
-            function validateForm() {
-                let isValid = true;
-
-                const matricula = $('#matricula').val();
-                if (!/^\d+$/.test(matricula)) {
-                    isValid = false;
-                    $('#matricula').addClass('is-invalid').removeClass('is-valid');
-                }
-
-                const correoInstitucional = $('#correoInstitucional').val();
-                if (!emailRegex.test(correoInstitucional)) {
-                    isValid = false;
-                    $('#correoInstitucional').addClass('is-invalid').removeClass('is-valid');
-                }
-
-                const telefonoContacto = $('#telefonoContacto').val();
-                const telefonoEmergencia = $('#telefonoEmergencia').val();
-                if (!phoneRegex.test(telefonoContacto) || !phoneRegex.test(telefonoEmergencia)) {
-                    isValid = false;
-                    if (!phoneRegex.test(telefonoContacto)) {
-                        $('#telefonoContacto').addClass('is-invalid').removeClass('is-valid');
-                    }
-                    if (!phoneRegex.test(telefonoEmergencia)) {
-                        $('#telefonoEmergencia').addClass('is-invalid').removeClass('is-valid');
-                    }
-                }
-
-                return isValid;
-            }
-
-            function showAlert(messageId) {
-                const alertElement = $('#' + messageId);
-                alertElement.removeClass('alert-hide').addClass('alert-show');
-                if (messageId == 'successMessage') {
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 3000);
-                }
-            }
-
-            window.hideAlert = function(messageId) {
-                $('#' + messageId).addClass('alert-hide').removeClass('alert-show');
-            }
-        });
-        function licenciatura() {
-            $.ajax({
-                type: 'POST',
-                url: "controller/ajax/ajax.forms.php",
-                dataSrc: '',
-                data: {
-                    search: 'degrees'
-                },
-                dataType: 'json',
-                success: function (response) {
-                    let options = '<option value="">Seleccione licenciatura</option>';
-                    $.each(response, function (index, item) {
-                        options += '<option value="' + item.idDegree + '">' + item.nameDegree + '</option>';
-                    });
-                    $('#licenciatura').html(options);
-                }
-            });
+        // Cargar licenciaturas
+        async function loadDegrees() {
+            try {
+                const res = await fetch('controller/ajax/ajax.forms.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        search: 'degrees'
+                    })
+                });
+                const data = await res.json();
+                const sel = document.getElementById('licenciatura');
+                sel.innerHTML = '<option value="">Seleccione licenciatura</option>' +
+                    data.map(d => `<option value="${d.idDegree}">${d.nameDegree}</option>`).join('');
+            } catch {}
         }
+        loadDegrees();
+
+        // Pasos
+        const steps = [...document.querySelectorAll('.step')];
+        let current = 0;
+        const show = i => steps.forEach((s, idx) => s.classList.toggle('d-none', idx !== i));
+        document.querySelectorAll('.next-btn').forEach(b =>
+            b.addEventListener('click', () => {
+                if (validateStep(current)) show(++current);
+            })
+        );
+        document.querySelectorAll('.prev-btn').forEach(b =>
+            b.addEventListener('click', () => show(--current))
+        );
+        show(0);
+
+        function validateStep(i) {
+            const elems = [...steps[i].querySelectorAll('input,select')];
+            let ok = true;
+            elems.forEach(f => {
+                if (!f.checkValidity()) {
+                    f.classList.add('is-invalid');
+                    ok = false;
+                } else f.classList.remove('is-invalid');
+            });
+            return ok;
+        }
+
+        // Toast helper
+        function toast(id) {
+            new bootstrap.Toast(document.getElementById(id), {
+                delay: 3000
+            }).show();
+        }
+
+        // Debounce
+        const debounce = (fn, ms = 500) => {
+            let t;
+            return (...a) => {
+                clearTimeout(t);
+                t = setTimeout(() => fn(...a), ms);
+            };
+        };
+
+        // Autocompletar al buscar matrícula
+        const matInput = document.getElementById('matricula');
+        matInput.addEventListener('input', debounce(async () => {
+            const val = matInput.value.trim();
+            if (!/^\d+$/.test(val)) return matInput.classList.add('is-invalid');
+            try {
+                const res = await fetch('controller/ajax/ajax.forms.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        action: 'checkMatricula',
+                        matricula: val
+                    })
+                });
+                const data = await res.json();
+                if (data.id) {
+                    // Campos personales
+                    document.getElementById('nombre').value = data.nombre;
+                    document.getElementById('apellidoPaterno').value = data.apellido1;
+                    document.getElementById('apellidoMaterno').value = data.apellido2;
+                    // Género ('F'->2, 'M'->1, otro->0)
+                    document.getElementById('genero').value =
+                        data.genero === 'F' ? 2 : data.genero === 'M' ? 1 : 0;
+                    // Fecha de nacimiento
+                    const [year, month, day] = data.fechaNacimiento.split(' ')[0].split('-');
+                    yearSel.value = year;
+                    document.getElementById('mesNacimiento').value = month;
+                    document.getElementById('diaNacimiento').value = day;
+                    // Dirección
+                    document.getElementById('calle').value = data.direcionCasa;
+                    document.getElementById('codigoPostal').value = data.cpCasa;
+                    document.getElementById('numeroExterior').value = data.numCasa;
+                    // Teléfonos (quitamos espacios)
+                    document.getElementById('telefonoContacto').value = (data.telefono || '').replace(/\s+/g, '');
+                    document.getElementById('telefonoEmergencia').value = (data.celular || '').replace(/\s+/g, '');
+
+                    // --- Nueva parte: seleccionar licenciatura por texto ---
+                    const degSel = document.getElementById('licenciatura');
+                    // buscamos la opción cuyo textContent coincida con nameOferta (case-insensitive)
+                    const matchOpt = Array.from(degSel.options)
+                        .find(opt => opt.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ñ/g, "n").replace(/Ñ/g, "N").trim().toUpperCase() === 
+                                     data.nameOferta.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ñ/g, "n").replace(/Ñ/g, "N").trim().toUpperCase());
+                    if (matchOpt) {
+                        degSel.value = matchOpt.value;
+                    }
+                    const nombre_periodo = data.nombre_periodo.toLowerCase();
+                    // Seleccionar tipo de licenciatura
+                    const tipoLicSel = document.getElementById('tipoLicenciatura');
+                    if (nombre_periodo.includes('cuatrimestre')) {
+                        tipoLicSel.value = 'cuatrimestral';
+                    } else if (nombre_periodo.includes('semestre')) {
+                        tipoLicSel.value = 'semestral';
+                    } else {
+                        tipoLicSel.value = '';
+                    }
+                    const correoInstitucional = data.matricula + '@unimontrer.edu.mx';
+                    document.getElementById('correoInstitucional').value = correoInstitucional;
+
+                    const Familiar_Telefono = (data.Familiar_Telefono || '').replace(/\D/g, '').slice(-10);
+                    // Teléfono de emergencia (Familiar_Telefono)
+                    document.getElementById('telefonoEmergencia').value = Familiar_Telefono;
+
+                    const TipoFamiliar = data.TipoFamiliar || '';
+                    // Parentesco
+                    const parentescoSel = document.getElementById('parentesco');
+                    parentescoSel.value = TipoFamiliar === 'Padre' ? 'Padre' :
+                        TipoFamiliar === 'Madre' ? 'Madre' : 'Otro';
+
+                    // ------------------------------------------------------
+
+                    // marcamos matrícula válida
+                    matInput.classList.remove('is-invalid');
+                    matInput.classList.add('is-valid');
+                } else {
+                    matInput.classList.add('is-invalid');
+                }
+            } catch {
+                matInput.classList.add('is-invalid');
+            }
+        }, 1000));
+
+
+        // Mostrar/ocultar "otro parentesco"
+        document.getElementById('parentesco').addEventListener('change', e => {
+            const div = document.getElementById('parentescoEspecificar');
+            const inp = document.getElementById('otroParentesco');
+            if (e.target.value === 'Otro') {
+                div.classList.remove('d-none');
+                inp.required = true;
+            } else {
+                div.classList.add('d-none');
+                inp.required = false;
+            }
+        });
+
+        // Envío
+        document.getElementById('registerStudentForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const form = e.target;
+            if (!form.checkValidity()) return;
+            const data = new FormData(form);
+            data.append('search', 'student');
+            data.append('action', 'addStudent');
+            try {
+                const res = await fetch('controller/ajax/ajax.forms.php', {
+                    method: 'POST',
+                    body: data
+                });
+                const txt = await res.text();
+                if (txt.includes('success')) toast('successToast');
+                else if (txt.includes('duplicate')) toast('duplicateToast');
+                else toast('errorToast');
+            } catch {
+                toast('errorToast');
+            }
+        });
     </script>
 </body>
 

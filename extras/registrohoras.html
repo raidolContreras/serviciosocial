@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Prácticas Profesionales</title>
+  <style>
+    /* =========================================
+       Variables de color y tipografía “Apple”
+       ========================================= */
+    :root {
+      --bg-window: #f2f2f2;
+      --bg-header: rgba(255, 255, 255, 0.85);
+      --bg-content: #ffffff;
+      --text-primary: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --accent: #007aff;
+      --border-radius: 14px;
+      --shadow-window: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+      --bg-chip: #f0f0f5;
+      --text-chip: #3c3c43;
+      --divider: #e0e0e5;
+    }
+
+    /* =========================================
+       Reset básico
+       ========================================= */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background-color: #e5e5ea;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    /* =========================================
+       Ventana estilo macOS (sin botones)
+       ========================================= */
+    .window {
+      width: 420px;
+      border-radius: var(--border-radius);
+      background-color: var(--bg-window);
+      box-shadow: var(--shadow-window);
+      overflow: hidden;
+    }
+
+    /* Barra superior translúcida */
+    .window-header {
+      backdrop-filter: blur(20px);
+      background-color: var(--bg-header);
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Contenido principal */
+    .window-content {
+      background-color: var(--bg-content);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Total acumulado */
+    .total-horas {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border: 1px solid var(--divider);
+      border-radius: 8px;
+      background-color: #fafafa;
+      margin-bottom: 20px;
+    }
+    .total-horas span {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+
+    /* Divisor */
+    .divider {
+      height: 1px;
+      background-color: var(--divider);
+      margin: 20px 0;
+    }
+
+    /* Título de sección */
+    .window-content h2 {
+      margin: 0 0 14px;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Formulario de horario */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 18px;
+    }
+    .form-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .form-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    .window-content label {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .window-content input[type="date"],
+    .window-content input[type="time"] {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 1rem;
+      border: 1px solid #d1d1d6;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      background-color: #fafafa;
+      color: var(--text-primary);
+    }
+    .window-content input[type="date"]:focus,
+    .window-content input[type="time"]:focus {
+      border-color: var(--accent);
+    }
+
+    /* Contenedor de resultado */
+    .result {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      min-height: 1.4em;
+      margin-top: 4px;
+      text-align: center;
+    }
+
+    /* Sección de registros anteriores */
+    .registro-historico {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .registro-historico h3 {
+      margin: 0 0 10px;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    .registros-container {
+      max-height: 120px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .registros-lista {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .registros-lista .registro {
+      display: inline-block;
+      padding: 6px 12px;
+      background-color: var(--bg-chip);
+      color: var(--text-chip);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    /* Ajuste de scroll (ocultar scrollbar en Chrome/Safari, mostrar finamente) */
+    .registros-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    .registros-container::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,0.2);
+      border-radius: 3px;
+    }
+
+    /* Media query para pantallas pequeñas */
+    @media (max-width: 440px) {
+      .window {
+        width: 90%;
+      }
+      .window-header {
+        font-size: 0.9rem;
+        padding: 12px 16px;
+      }
+      .total-horas {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+      }
+      .total-horas span {
+        font-size: 0.85rem;
+      }
+      .window-content h2 {
+        font-size: 1.15rem;
+      }
+      .window-content label {
+        font-size: 0.88rem;
+      }
+      .window-content input[type="date"],
+      .window-content input[type="time"] {
+        font-size: 0.95rem;
+        padding: 7px 9px;
+      }
+      .result {
+        font-size: 0.95rem;
+      }
+      .registro-historico h3 {
+        font-size: 1rem;
+      }
+      .registros-lista .registro {
+        font-size: 0.85rem;
+        padding: 5px 8px;
+      }
+      .registros-container {
+        max-height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <!-- Barra de título estilo Apple (sin botones) -->
+    <div class="window-header">
+      Registro de Prácticas Profesionales
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="window-content">
+      <!-- Total acumulado -->
+      <div class="total-horas">
+        <div>Total acumulado: 41 h 20 min</div>
+        <span>/ 180 h</span>
+      </div>
+
+      <h2>Control de Horas Diarias</h2>
+
+      <!-- Fecha actual (auto) -->
+      <div class="form-group">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" type="date" readonly />
+      </div>
+
+      <!-- Horario ingreso y salida -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="hora-ingreso">Hora de Ingreso</label>
+          <input id="hora-ingreso" type="time" />
+        </div>
+        <div class="form-group">
+          <label for="hora-salida">Hora de Salida</label>
+          <input id="hora-salida" type="time" />
+        </div>
+      </div>
+
+      <!-- Resultado calculado -->
+      <div class="result" id="resultadoHoras">Horas trabajadas: —</div>
+
+      <!-- Divisor -->
+      <div class="divider"></div>
+
+      <!-- Sección de registros anteriores (ejemplos) -->
+      <div class="registro-historico">
+        <h3>Registros Anteriores</h3>
+        <div class="registros-container">
+          <div class="registros-lista">
+            <!-- Ejemplos de muchos registros -->
+            <span class="registro">2025-05-28: 8 h 00 min</span>
+            <span class="registro">2025-05-29: 7 h 45 min</span>
+            <span class="registro">2025-05-30: 9 h 15 min</span>
+            <span class="registro">2025-05-31: 8 h 30 min</span>
+            <span class="registro">2025-06-01: 7 h 50 min</span>
+            <span class="registro">2025-06-02: 8 h 10 min</span>
+            <span class="registro">2025-06-03: 7 h 55 min</span>
+            <span class="registro">2025-06-04: 8 h 25 min</span>
+            <span class="registro">2025-06-05: 7 h 40 min</span>
+            <span class="registro">2025-06-06: 8 h 05 min</span>
+            <span class="registro">2025-06-07: 7 h 30 min</span>
+            <span class="registro">2025-06-08: 8 h 20 min</span>
+            <span class="registro">2025-06-09: 7 h 50 min</span>
+            <span class="registro">2025-06-10: 8 h 00 min</span>
+            <span class="registro">2025-06-11: 7 h 45 min</span>
+            <span class="registro">2025-06-12: 8 h 15 min</span>
+            <span class="registro">2025-06-13: 7 h 35 min</span>
+            <span class="registro">2025-06-14: 8 h 10 min</span>
+            <span class="registro">2025-06-15: 7 h 55 min</span>
+            <span class="registro">2025-06-16: 8 h 25 min</span>
+            <span class="registro">2025-06-17: 7 h 40 min</span>
+            <span class="registro">2025-06-18: 8 h 05 min</span>
+            <span class="registro">2025-06-19: 7 h 30 min</span>
+            <span class="registro">2025-06-20: 8 h 20 min</span>
+            <span class="registro">2025-06-21: 7 h 50 min</span>
+            <span class="registro">2025-06-22: 8 h 00 min</span>
+            <span class="registro">2025-06-23: 7 h 45 min</span>
+            <span class="registro">2025-06-24: 8 h 15 min</span>
+            <span class="registro">2025-06-25: 7 h 35 min</span>
+            <span class="registro">2025-06-26: 8 h 10 min</span>
+            <span class="registro">2025-06-27: 7 h 55 min</span>
+            <span class="registro">2025-06-28: 8 h 25 min</span>
+            <span class="registro">2025-06-29: 7 h 40 min</span>
+            <span class="registro">2025-06-30: 8 h 05 min</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mostrar automáticamente la fecha de hoy
+    const fechaInput = document.getElementById('fecha');
+    const hoy = new Date();
+    const yyyy = hoy.getFullYear();
+    const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+    const dd = String(hoy.getDate()).padStart(2, '0');
+    fechaInput.value = `${yyyy}-${mm}-${dd}`;
+
+    const ingresoInput = document.getElementById('hora-ingreso');
+    const salidaInput = document.getElementById('hora-salida');
+    const resultadoDiv = document.getElementById('resultadoHoras');
+
+    // Función para calcular la diferencia en horas automáticamente
+    function calcularHoras() {
+      const ingreso = ingresoInput.value;
+      const salida = salidaInput.value;
+
+      if (!ingreso || !salida) {
+        resultadoDiv.textContent = 'Horas trabajadas: —';
+        return;
+      }
+
+      // Convertir a minutos totales
+      const [hIng, mIng] = ingreso.split(':').map(Number);
+      const [hSal, mSal] = salida.split(':').map(Number);
+      const totalMinIng = hIng * 60 + mIng;
+      const totalMinSal = hSal * 60 + mSal;
+
+      let diferenciaMin = totalMinSal - totalMinIng;
+      if (diferenciaMin < 0) {
+        // Si cruza medianoche, sumar 24 h
+        diferenciaMin += 24 * 60;
+      }
+
+      const horas = Math.floor(diferenciaMin / 60);
+      const minutos = diferenciaMin % 60;
+
+      resultadoDiv.textContent = `Horas trabajadas: ${horas} h ${minutos} min`;
+    }
+
+    // Asociar evento a los inputs para recalcular al cambiar
+    ingresoInput.addEventListener('change', calcularHoras);
+    salidaInput.addEventListener('change', calcularHoras);
+  </script>
+</body>
+</html>

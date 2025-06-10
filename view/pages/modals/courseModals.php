@@ -36,7 +36,7 @@
 <div class="modal fade" id="editCourseModal" tabindex="-1" aria-labelledby="editCourseModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary">
+            <div class="modal-header">
                 <h5 class="modal-title" id="editCourseModalLabel">Editar Curso</h5>
             </div>
             <div class="modal-body">

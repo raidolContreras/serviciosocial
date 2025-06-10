@@ -20,19 +20,17 @@ function sendTestMail() {
         $mail->Port = 587;
 
         // Configuración del remitente y destinatario
-        $mail->setFrom('no-reply@unimontrer.edu.mx', 'UNIMO'); // Remitente visible
-        $mail->addAddress('oscarcontrerasf91@gmail.com'); // Correo de destino
+        $mail->setFrom('serviciosocial@unimontrer.edu.mx', 'UNIMO'); // Remitente visible
+        $mail->addAddress('informatica@unimontrer.edu.mx'); // Correo de destino
 
         // Contenido del correo
         $mail->isHTML(true);
         $mail->Subject = 'Correo de Prueba';
         $mail->Body    = '<h1>Este es un correo de prueba</h1><p>Enviado desde PHPMailer.</p>';
         $mail->AltBody = 'Este es un correo de prueba en texto plano.';
-        $mail->SMTPDebug = 2;
 
         // Enviar el correo
         $mail->send();
-        echo 'El correo ha sido enviado correctamente';
     } catch (Exception $e) {
         echo "El correo no pudo ser enviado. Error: {$mail->ErrorInfo}";
     }

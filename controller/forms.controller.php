@@ -1,8 +1,18 @@
 <?php
 
-class FormsController {
+#autoload composer
+require_once __DIR__ . '/../vendor/autoload.php';
 
-    public function ctrRegisterUser() {
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
+class FormsController
+{
+
+    public function ctrRegisterUser()
+    {
         if (isset($_POST["firstname"])) {
             $table = "users";
             $data = array(
@@ -17,7 +27,8 @@ class FormsController {
         }
     }
 
-    public function ctrLogin() {
+    public function ctrLogin()
+    {
         if (isset($_POST["email"]) && isset($_POST["password"])) {
             $table = "users";
             $item = "email";
@@ -32,7 +43,7 @@ class FormsController {
                 $student = FormsModel::mdlGetStudent($_POST['email']);
                 if ($student && password_verify($_POST["password"], $student["password"])) {
                     session_start();
-                    $student['role'] = 'student'; 
+                    $student['role'] = 'student';
                     $_SESSION["logged"] = true;
                     $_SESSION["user"] = $student;
                     echo 'success';
@@ -43,74 +54,90 @@ class FormsController {
         }
     }
 
-    public function ctrGradeStudent($data) {
+    public function ctrGradeStudent($data)
+    {
         return FormsModel::mdlGradeStudent($data);
     }
 
-    public function ctrSearchAreas($idArea) {
+    public function ctrSearchAreas($idArea)
+    {
         return FormsModel::mdlSearchAreas($idArea);
     }
 
-    public function ctrEditArea($editArea, $nameArea) {
+    public function ctrEditArea($editArea, $nameArea)
+    {
         return FormsModel::mdlEditArea($editArea, $nameArea);
     }
 
-    public function ctrDeleteArea($deleteArea) {
+    public function ctrDeleteArea($deleteArea)
+    {
         return FormsModel::mdlDeleteArea($deleteArea);
     }
-    
-    public function ctrAddArea($nameArea) {
+
+    public function ctrAddArea($nameArea)
+    {
         return FormsModel::mdlAddArea($nameArea);
     }
 
-    public function ctrSearchEventTypes($idEventType) {
+    public function ctrSearchEventTypes($idEventType)
+    {
         return FormsModel::mdlSearchEventTypes($idEventType);
     }
 
-    public function ctrEditEventType($editEventType, $name, $idArea, $pointsPerEvent, $benefitsPerYear) {
+    public function ctrEditEventType($editEventType, $name, $idArea, $pointsPerEvent, $benefitsPerYear)
+    {
         return FormsModel::mdlEditEventTypes($editEventType, $name, $idArea, $pointsPerEvent, $benefitsPerYear);
     }
 
-    public function ctrDeleteEventType($deleteEventType) {
+    public function ctrDeleteEventType($deleteEventType)
+    {
         return FormsModel::mdlDeleteEventTypes($deleteEventType);
     }
-    
-    public function ctrAddEventType($name, $pointsPerEvent, $benefitsPerYear, $idArea) {
+
+    public function ctrAddEventType($name, $pointsPerEvent, $benefitsPerYear, $idArea)
+    {
         return FormsModel::mdlAddEventTypes($name, $pointsPerEvent, $benefitsPerYear, $idArea);
     }
-    
-    public function ctrGetCourses($idCourse) {
+
+    public function ctrGetCourses($idCourse)
+    {
         return FormsModel::mdlGetCourses($idCourse);
     }
 
-    public function ctrAddCourse($nameCourse, $startCourse, $endCourse) {
+    public function ctrAddCourse($nameCourse, $startCourse, $endCourse)
+    {
         return FormsModel::mdlAddCourse($nameCourse, $startCourse, $endCourse);
     }
 
-    public function ctrEditCourse($idCourse, $nameCourse, $startCourse, $endCourse) {
+    public function ctrEditCourse($idCourse, $nameCourse, $startCourse, $endCourse)
+    {
         return FormsModel::mdlUpdateCourse($idCourse, $nameCourse, $startCourse, $endCourse);
     }
 
-    public function ctrDeleteCourse($deleteCourse) {
+    public function ctrDeleteCourse($deleteCourse)
+    {
         return FormsModel::mdlDeleteCourse($deleteCourse);
     }
-    
-    public function ctrSearchStudents($student) {
+
+    public function ctrSearchStudents($student)
+    {
         return FormsModel::mdlSearchStudents($student);
     }
-    
-    public function ctrEndSocialService($student) {
+
+    public function ctrEndSocialService($student)
+    {
         $student = FormsModel::mdlSearchStudents($student);
         if ($student) {
             $degree = FormsModel::mdlSearchDegrees($student['idDegree']);
-            
+
             FormsModelPDF::getAceptationCard($student, $degree);
 
             return FormsModelPDF::mdlEndSocialService($student, $degree);
         }
     }
 
-    public function ctrAcceptStudent($student) {
+    public function ctrAcceptStudent($student)
+    {
         $response = FormsModel::mdlAcceptStudent($student);
         if ($response == 'success') {
             // Generate a random password
@@ -131,16 +158,19 @@ class FormsController {
         }
         return $password;
     }
-    
-    public function ctrDenegateStudent($idStudent) {
+
+    public function ctrDenegateStudent($idStudent)
+    {
         return FormsModel::mdlDenegateStudent($idStudent);
     }
-    
-    public function ctrDropStudent($idStudent, $reason) {
+
+    public function ctrDropStudent($idStudent, $reason)
+    {
         return FormsModel::mdlDropStudent($idStudent, $reason);
     }
 
-    private function generateRandomPassword($length = 10) {
+    private function generateRandomPassword($length = 10)
+    {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
@@ -150,59 +180,73 @@ class FormsController {
         return $randomString;
     }
 
-    public function ctrGetEvents() {
+    public function ctrGetEvents()
+    {
         return FormsModel::mdlGetEvents();
     }
 
-    static public function ctrAddDegree($data) {
+    static public function ctrAddDegree($data)
+    {
         return FormsModel::mdlAddDegree($data);
     }
 
-    static public function ctrSearchDegrees($idDegree) {
+    static public function ctrSearchDegrees($idDegree)
+    {
         return FormsModel::mdlSearchDegrees($idDegree);
     }
 
-    static public function ctrRegisterStudent($data) {
+    static public function ctrRegisterStudent($data)
+    {
         return FormsModel::mdlRegisterStudent($data);
     }
 
-    static public function ctrEditStudent($data) {
+    static public function ctrEditStudent($data)
+    {
         return FormsModel::mdlEditStudent($data);
     }
 
-    static public function ctrApplyEvent($idEvent, $idStudent) {
+    static public function ctrApplyEvent($idEvent, $idStudent)
+    {
         return FormsModel::mdlApplyEvent($idEvent, $idStudent);
     }
 
-    static public function ctrCheckApplicationEvent($idEvent, $idStudent) {
+    static public function ctrCheckApplicationEvent($idEvent, $idStudent)
+    {
         return FormsModel::mdlCheckApplicationEvent($idEvent, $idStudent);
     }
 
-    static public function ctrSearchEvents($idEvent) {
+    static public function ctrSearchEvents($idEvent)
+    {
         return FormsModel::mdlSearchEvents($idEvent);
     }
 
-    static public function ctrStudentEvents($idEvent) {
+    static public function ctrStudentEvents($idEvent)
+    {
         return FormsModel::mdlStudentEvents($idEvent);
     }
 
-    static public function ctrEventsCandidates($idEvent) {
+    static public function ctrEventsCandidates($idEvent)
+    {
         return FormsModel::mdlEventsCandidates($idEvent);
     }
 
-    static public function ctrUsersToAreas($idArea) {
+    static public function ctrUsersToAreas($idArea)
+    {
         return FormsModel::mdlUsersToAreas($idArea);
     }
 
-    static public function ctrUpdateUsersToAreas($idArea, $idUser) {
+    static public function ctrUpdateUsersToAreas($idArea, $idUser)
+    {
         return FormsModel::mdlUpdateUsersToAreas($idArea, $idUser);
     }
 
-    static public function ctrSearchUsers($idUser) {
+    static public function ctrSearchUsers($idUser)
+    {
         return FormsModel::mdlSearchUsers($idUser);
     }
 
-    static public function ctrAcceptCandidate($idStudent, $idEvent, $idUser, $status) {
+    static public function ctrAcceptCandidate($idStudent, $idEvent, $idUser, $status)
+    {
         if ($status == 1) {
             return FormsModel::mdlAcceptCandidate($idStudent, $idEvent, $idUser);
         } else {
@@ -210,7 +254,8 @@ class FormsController {
         }
     }
 
-    static public function ctrApproveEvent($idStudent, $idEvent, $idUser, $status) {
+    static public function ctrApproveEvent($idStudent, $idEvent, $idUser, $status)
+    {
         if ($status == 1) {
             $points = FormsModel::mdlGetPointsEvent($idEvent);
             return FormsModel::mdlApproveEvent($idStudent, $idEvent, $idUser, $points['points']);
@@ -219,15 +264,18 @@ class FormsController {
         }
     }
 
-    static public function ctrStudentEventsPoints($idStudent) {
+    static public function ctrStudentEventsPoints($idStudent)
+    {
         return FormsModel::mdlStudentEventsPoints($idStudent);
     }
 
-    static public function ctrEditDegree($data) {
+    static public function ctrEditDegree($data)
+    {
         return FormsModel::mdlEditDegree($data);
     }
 
-    static public function ctrDeleteDegree($idDegree) {
+    static public function ctrDeleteDegree($idDegree)
+    {
         return FormsModel::mdlDeleteDegree($idDegree);
     }
 }
@@ -236,9 +284,10 @@ class FormsController {
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require  __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-function sendPasswordToStudent($email, $password) {
+function sendPasswordToStudent($email, $password)
+{
     $subject = 'Servicio social UNIMO - Nueva contraseña';
 
     $message = '
@@ -338,7 +387,7 @@ function sendPasswordToStudent($email, $password) {
                 <p>Tu contraseña es:</p>
                 <p class="info-box">' . $password . '</p>
                 <p>Para iniciar sesión en nuestra plataforma, haz clic en el botón de abajo o visita nuestro sitio web.</p>
-                <p style="text-align: center;"><a href="https://campuscare.devosco.io/login?mail='.$email.'&password='.$password.'" target="_blank" class="button">Iniciar sesión</a></p>
+                <p style="text-align: center;"><a href="https://campuscare.devosco.io/login?mail=' . $email . '&password=' . $password . '" target="_blank" class="button">Iniciar sesión</a></p>
             </div>
             <div class="footer">
                 <p>Si tienes alguna pregunta, no dudes en <a href="mailto:serviciosocial@unimontrer.edu.mx">contactarnos</a>.</p>
@@ -350,34 +399,49 @@ function sendPasswordToStudent($email, $password) {
 
     $mail = new PHPMailer(true);
 
+    // configurar campos env
+    $HOST = $_ENV['SMTP_HOST'];
+    $USER = $_ENV['SMTP_USER'];
+    $PASS = $_ENV['SMTP_PASS'];
+    $PORT = $_ENV['SMTP_PORT'];
+    $NAME = $_ENV['FROM_NAME'];
     try {
         // Configuración del servidor SMTP
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com'; // Cambia esto al servidor SMTP que estés usando
+        $mail->Host = $HOST; // Cambia esto al servidor SMTP que estés usando
         $mail->SMTPAuth = true;
-        $mail->Username = 'no-reply@unimontrer.edu.mx'; // Cambia esto a tu dirección de correo electrónico real
-        $mail->Password = 'Unimo2024$'; // Cambia esto a tu contraseña de correo electrónico real
+        $mail->Username = $USER; // Cambia esto a tu dirección de correo electrónico
+        $mail->Password = $PASS; // Cambia esto a tu contraseña de correo electrónico
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Port = $PORT;
 
         // Configuración del remitente y destinatario
-		$mail->setFrom('unimontrer@devosco.io', 'UNIMO');
+        $mail->setFrom($USER, 'Sistema de Servicio Social - ' . $NAME);
         $mail->addAddress($email); // Añadir destinatario
-        
+
+
         // Contenido del correo
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body    = $message;
-        $mail->CharSet= 'UTF-8';
+        $mail->Body = $message;
         $mail->AltBody = '';
 
         // Enviar correo
         $mail->send();
-        return true;
+        return 'ok';
     } catch (Exception $e) {
         error_log("Error al enviar correo: {$mail->ErrorInfo}");
         echo "Error al enviar correo: {$mail->ErrorInfo}";
         return false;
     }
 
+}
+
+class SilController
+{
+
+    public function ctrSearchStudentSIL($matricula)
+    {
+        return SilModel::mdlSearchStudentSIL($matricula);
+    }
 }

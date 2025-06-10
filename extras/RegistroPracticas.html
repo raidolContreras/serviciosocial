@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registro de Prácticas Profesionales</title>
+  <style>
+    :root {
+      --bg-window: #f2f2f2;
+      --bg-header: rgba(255,255,255,0.85);
+      --bg-content: #ffffff;
+      --text-primary: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --accent: #007aff;
+      --border-radius: 14px;
+      --shadow-window: 0 10px 30px rgba(0,0,0,0.1);
+      --divider: #e0e0e5;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e5e5ea;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      color: var(--text-primary);
+    }
+
+    /* ventana con flex para header fijo y contenido scroll */
+    .window {
+      width: 90%;
+      max-width: 700px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      border-radius: var(--border-radius);
+      background-color: var(--bg-window);
+      box-shadow: var(--shadow-window);
+      overflow: hidden;
+    }
+    .window-header {
+      flex: 0 0 auto;
+      backdrop-filter: blur(20px);
+      background-color: var(--bg-header);
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .window-content {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      background-color: var(--bg-content);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--divider);
+      padding-bottom: 4px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+      gap: 16px 24px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select {
+      padding: 8px 10px;
+      font-size: 1rem;
+      border: 1px solid #d1d1d6;
+      border-radius: 8px;
+      background-color: #fafafa;
+      color: var(--text-primary);
+      transition: border-color .2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .btn-submit {
+      align-self: flex-end;
+      padding: 10px 24px;
+      background-color: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color .2s;
+    }
+    .btn-submit:hover {
+      background-color: #0060df;
+    }
+
+    /* scrollbar interno */
+    .window-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    .window-content::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.2);
+      border-radius: 3px;
+    }
+
+    @media (max-width: 600px) {
+      .btn-submit { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="window-header">
+      Registro de Prácticas Profesionales
+    </div>
+    <div class="window-content">
+      <form>
+        <!-- Datos del Alumno -->
+        <div>
+          <div class="section-title">Datos del Alumno</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nombre">Nombre completo</label>
+              <input id="nombre" type="text" placeholder="Juan Pérez López" required />
+            </div>
+            <div class="form-group">
+              <label for="matricula">Matrícula</label>
+              <input id="matricula" type="text" placeholder="202512345" required />
+            </div>
+            <div class="form-group">
+              <label for="curp">CURP</label>
+              <input id="curp" type="text" placeholder="LLLL000101HDFABC01" required />
+            </div>
+            <div class="form-group">
+              <label for="nacimiento">Fecha de Nacimiento</label>
+              <input id="nacimiento" type="date" required />
+            </div>
+            <div class="form-group">
+              <label for="genero">Género</label>
+              <select id="genero" required>
+                <option value="">Selecciona...</option>
+                <option>Masculino</option>
+                <option>Femenino</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="programa">Programa Académico</label>
+              <select id="programa" required>
+                <option value="">Selecciona...</option>
+                <option>Ingeniería en Sistemas</option>
+                <option>Administración</option>
+                <option>Otra</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="semestre">Semestre</label>
+              <input id="semestre" type="text" placeholder="6°" required />
+            </div>
+            <div class="form-group">
+              <label for="email-alumno">Correo Electrónico</label>
+              <input id="email-alumno" type="email" placeholder="ejemplo@dominio.com" required />
+            </div>
+            <div class="form-group">
+              <label for="telefono-alumno">Teléfono</label>
+              <input id="telefono-alumno" type="tel" placeholder="(55) 1234 5678" required />
+            </div>
+            <div class="form-group">
+              <label for="direccion-alumno">Dirección</label>
+              <input id="direccion-alumno" type="text" placeholder="Calle, número, colonia, CP" required />
+            </div>
+            <div class="form-group">
+              <label for="tutor-acad">Tutor Académico</label>
+              <input id="tutor-acad" type="text" placeholder="Nombre del tutor" required />
+            </div>
+            <div class="form-group">
+              <label for="email-tutor">Email Tutor</label>
+              <input id="email-tutor" type="email" placeholder="tutor@universidad.edu" required />
+            </div>
+            <div class="form-group">
+              <label for="horas-requeridas">Horas Requeridas</label>
+              <input id="horas-requeridas" type="number" min="1" placeholder="180" required />
+            </div>
+            <div class="form-group">
+              <label for="periodo">Periodo de Prácticas</label>
+              <input id="periodo" type="text" placeholder="Ej. Ene-Jun 2025" required />
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos del Organismo Receptor -->
+        <div>
+          <div class="section-title">Datos del Organismo Receptor</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="empresa">Nombre de la Empresa</label>
+              <input id="empresa" type="text" placeholder="Tech Solutions S.A." required />
+            </div>
+            <div class="form-group">
+              <label for="rfc">RFC</label>
+              <input id="rfc" type="text" placeholder="TSS850101XYZ" required />
+            </div>
+            <div class="form-group">
+              <label for="giro">Giro</label>
+              <input id="giro" type="text" placeholder="Desarrollo de Software" required />
+            </div>
+            <div class="form-group">
+              <label for="website">Sitio Web</label>
+              <input id="website" type="url" placeholder="https://www.empresa.com" />
+            </div>
+            <div class="form-group">
+              <label for="num-empleados"># Empleados</label>
+              <input id="num-empleados" type="number" min="1" placeholder="50" />
+            </div>
+            <div class="form-group">
+              <label for="direccion-org">Dirección</label>
+              <input id="direccion-org" type="text" placeholder="Calle, número, colonia, CP" required />
+            </div>
+            <div class="form-group">
+              <label for="contacto">Supervisor</label>
+              <input id="contacto" type="text" placeholder="Ing. María Gómez" required />
+            </div>
+            <div class="form-group">
+              <label for="email-org">Email Supervisor</label>
+              <input id="email-org" type="email" placeholder="contacto@empresa.com" required />
+            </div>
+            <div class="form-group">
+              <label for="telefono-org">Teléfono Supervisor</label>
+              <input id="telefono-org" type="tel" placeholder="(55) 9876 5432" required />
+            </div>
+            <div class="form-group">
+              <label for="horario-org">Horario de Prácticas</label>
+              <input id="horario-org" type="text" placeholder="Lun-Vie 9:00–15:00" />
+            </div>
+            <div class="form-group">
+              <label for="responsabilidades">Responsabilidades</label>
+              <input id="responsabilidades" type="text" placeholder="Desarrollo de módulos" />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Registrar Alumno</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

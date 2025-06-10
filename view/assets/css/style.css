@@ -697,9 +697,6 @@ progress {
     max-width: 100%;
   }
 
-  .navbar-collapse {
-    margin-top: 100px;
-  }
 }
 
 @media (min-width: 768px) {
@@ -710,9 +707,6 @@ progress {
     max-width: 100%;
   }
 
-  .navbar-collapse {
-    margin-top: 100px;
-  }
 }
 
 @media (min-width: 993px) {
@@ -724,9 +718,6 @@ progress {
     max-width: 100%;
   }
 
-  .navbar-collapse {
-    margin-top: 10px;
-  }
 }
 
 @media (min-width: 1200px) {
@@ -739,9 +730,6 @@ progress {
     max-width: 100%;
   }
 
-  .navbar-collapse {
-    margin-top: 10px;
-  }
 }
 
 @media (min-width: 1400px) {
@@ -753,10 +741,6 @@ progress {
   .container-xl,
   .container-xxl {
     max-width: 100%;
-  }
-
-  .navbar-collapse {
-    margin-top: 10px;
   }
 }
 
@@ -13498,13 +13482,15 @@ body {
   position: relative;
 }
 
-.logo, .back-logo {
+.logo,
+.back-logo {
   font-size: 24px;
   color: rgba(255, 255, 255, 0.8) !important;
   font-weight: 500;
 }
 
-.logo, .back-logo:hover {
+.logo,
+.back-logo:hover {
   color: #fff !important;
 }
 
@@ -15221,9 +15207,10 @@ body {
   top: 0;
   right: 0;
   bottom: 0;
+  width: 15rem;
   background-color: var(--menu-bg-color);
   padding: 20px;
-  z-index: 1051;
+  z-index: 1052;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
@@ -15291,7 +15278,8 @@ body {
   box-shadow: none !important;
 }
 
-.card-custom, .card-custom-xl {
+.card-custom,
+.card-custom-xl {
   background-color: #fff;
   /* Fondo blanco para la tarjeta */
   border-radius: 20px;
@@ -15317,28 +15305,36 @@ body {
 
 /* Media Queries para hacerlo responsivo */
 @media (max-width: 1200px) {
-  .card-custom, .card-custom-xl {
+
+  .card-custom,
+  .card-custom-xl {
     max-width: 80%;
     /* Ancho máximo del 80% en pantallas grandes */
   }
 }
 
 @media (max-width: 992px) {
-  .card-custom, .card-custom-xl {
+
+  .card-custom,
+  .card-custom-xl {
     max-width: 90%;
     /* Ancho máximo del 90% en pantallas medianas */
   }
 }
 
 @media (max-width: 768px) {
-  .card-custom, .card-custom-xl {
+
+  .card-custom,
+  .card-custom-xl {
     max-width: 95%;
     /* Ancho máximo del 95% en pantallas pequeñas */
   }
 }
 
 @media (max-width: 576px) {
-  .card-custom, .card-custom-xl {
+
+  .card-custom,
+  .card-custom-xl {
     max-width: 100%;
     /* Ancho máximo del 100% en pantallas extra pequeñas */
     margin: 10px;
@@ -15347,16 +15343,26 @@ body {
 }
 
 .card-header-custom {
-  background-color: #f8f9fa; /* Color de fondo del encabezado */
-  color: #333; /* Color del texto */
-  padding: 5px; /* Relleno interno */
-  font-size: 1.25rem; /* Tamaño de fuente */
-  border-top-left-radius: 20px; /* Redondeo de esquinas superiores izquierda */
-  border-top-right-radius: 20px; /* Redondeo de esquinas superiores derecha */
-  display: flex; /* Establecer flexbox para alineación de elementos */
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: center; /* Centrar verticalmente */
-  text-align: center; /* Asegurar que el texto esté centrado */
+  background-color: #f8f9fa;
+  /* Color de fondo del encabezado */
+  color: #333;
+  /* Color del texto */
+  padding: 5px;
+  /* Relleno interno */
+  font-size: 1.25rem;
+  /* Tamaño de fuente */
+  border-top-left-radius: 20px;
+  /* Redondeo de esquinas superiores izquierda */
+  border-top-right-radius: 20px;
+  /* Redondeo de esquinas superiores derecha */
+  display: flex;
+  /* Establecer flexbox para alineación de elementos */
+  justify-content: center;
+  /* Centrar horizontalmente */
+  align-items: center;
+  /* Centrar verticalmente */
+  text-align: center;
+  /* Asegurar que el texto esté centrado */
 }
 
 .card-body-custom {
@@ -15374,51 +15380,72 @@ body {
 }
 
 .modal-content {
-  border-radius: 20px; /* Bordes redondeados para el modal */
-  overflow: hidden; /* Asegurar que todo dentro del modal se quede dentro de los bordes redondeados */
+  border-radius: 20px;
+  /* Bordes redondeados para el modal */
+  overflow: hidden;
+  /* Asegurar que todo dentro del modal se quede dentro de los bordes redondeados */
 }
 
 .modal-header {
-  background-color: #01643d; /* Color de fondo para el encabezado del modal */
-  border-bottom: none; /* Eliminar el borde inferior por defecto */
-  position: relative; /* Para posicionar absolutamente el botón de cierre */
+  background-color: #01643d;
+  /* Color de fondo para el encabezado del modal */
+  border-bottom: none;
+  /* Eliminar el borde inferior por defecto */
+  position: relative;
+  /* Para posicionar absolutamente el botón de cierre */
 }
 
 .modal-title {
-  margin: 0 auto; /* Centrar el título del modal */
+  margin: 0 auto;
+  /* Centrar el título del modal */
 }
 
 .btn-close {
-  position: absolute; /* Posicionar el botón de cierre */
-  right: 1rem; /* A la derecha del modal */
-  top: 1rem; /* Arriba del modal */
-  background: url('path_to_close_icon') no-repeat center center; /* Usa la imagen de cierre proporcionada */
-  border: none; /* Eliminar el borde por defecto */
-  outline: none; /* Eliminar el resplandor al enfocar */
+  position: absolute;
+  /* Posicionar el botón de cierre */
+  right: 1rem;
+  /* A la derecha del modal */
+  top: 1rem;
+  /* Arriba del modal */
+  background: url('path_to_close_icon') no-repeat center center;
+  /* Usa la imagen de cierre proporcionada */
+  border: none;
+  /* Eliminar el borde por defecto */
+  outline: none;
+  /* Eliminar el resplandor al enfocar */
   color: #d33;
 }
 
 .modal-body {
-  padding: 2rem; /* Más espacio interior */
+  padding: 2rem;
+  /* Más espacio interior */
 }
 
 /* Estilos para los botones de acción */
 .btn-accion {
-  width: 100%; /* Hacer que los botones ocupen todo el ancho */
-  margin-top: 1rem; /* Margen superior */
+  width: 100%;
+  /* Hacer que los botones ocupen todo el ancho */
+  margin-top: 1rem;
+  /* Margen superior */
 }
 
 /* Estilos específicos para los botones Registrar y Cancelar */
 .btn-registrar {
-  background-color: #28a745; /* Color de fondo verde */
-  color: white; /* Texto en blanco */
-  border: none; /* Sin borde */
+  background-color: #28a745;
+  /* Color de fondo verde */
+  color: white;
+  /* Texto en blanco */
+  border: none;
+  /* Sin borde */
 }
 
 .btn-cancelar {
-  background-color: #dc3545; /* Color de fondo rojo */
-  color: white; /* Texto en blanco */
-  border: none; /* Sin borde */
+  background-color: #dc3545;
+  /* Color de fondo rojo */
+  color: white;
+  /* Texto en blanco */
+  border: none;
+  /* Sin borde */
 }
 
 .form-control:hover,
@@ -15429,15 +15456,19 @@ body {
   box-shadow: none;
 }
 
-.center-buttons{
-  display: flex; /* Establecer flexbox para alineación de elementos */
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: center; /* Centrar verticalmente */
-  text-align: center; /* Asegurar que el texto esté centrado */
+.center-buttons {
+  display: flex;
+  /* Establecer flexbox para alineación de elementos */
+  justify-content: center;
+  /* Centrar horizontalmente */
+  align-items: center;
+  /* Centrar verticalmente */
+  text-align: center;
+  /* Asegurar que el texto esté centrado */
   padding: 8px 8px;
 }
 
-.dt-column-title{
+.dt-column-title {
   display: grid;
   justify-content: center;
   padding-top: 15px;
@@ -15460,17 +15491,29 @@ body {
   background-color: transparent;
 }
 
-.btn-activar { color: #189337; }
-.btn-invitados { color: #189337; font-weight: normal; }
-.btn-editar { color: #01643D; }
-.btn-eliminar { color: #D80000; }
+.btn-activar {
+  color: #189337;
+}
 
-.btn-activar:hover {
-  color: #086611; 
+.btn-invitados {
+  color: #189337;
+  font-weight: normal;
+}
+
+.btn-editar {
+  color: #01643D;
+}
+
+.btn-eliminar {
+  color: #D80000;
 }
 
 .btn-activar:hover {
-  color: #086611; 
+  color: #086611;
+}
+
+.btn-activar:hover {
+  color: #086611;
 }
 
 .btn-editar:hover {
@@ -15485,16 +15528,18 @@ body {
   font-size: 1rem;
 }
 
-.dt-orderable-none{
+.dt-orderable-none {
   padding: 1px !important;
 }
 
 .btn-custom.btn-invitados .fa-chevron-right {
-  transition: transform 0.3s ease; /* Agregar una transición para suavizar el movimiento */
+  transition: transform 0.3s ease;
+  /* Agregar una transición para suavizar el movimiento */
 }
 
 .btn-custom.btn-invitados:hover .fa-chevron-right {
-  transform: translateX(5px); /* Mover el ícono 5px hacia la derecha al hacer hover */
+  transform: translateX(5px);
+  /* Mover el ícono 5px hacia la derecha al hacer hover */
 }
 
 .btn-download {
@@ -15509,7 +15554,8 @@ body {
 }
 
 .btn-download:hover .download-text {
-  transform: translateX(10px); /* Desplazar el texto hacia la derecha al hacer hover */
+  transform: translateX(10px);
+  /* Desplazar el texto hacia la derecha al hacer hover */
 }
 
 .btn-download .fa-arrow-down {
@@ -15523,16 +15569,19 @@ body {
 
 .btn-download:hover .fa-arrow-down {
   opacity: 1;
-  animation: bounce 1s infinite alternate; /* Aplicar la animación de rebote al hacer hover */
+  animation: bounce 1s infinite alternate;
+  /* Aplicar la animación de rebote al hacer hover */
 }
 
 @keyframes bounce {
   0% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
+
   100% {
     transform: translateY(0);
   }
@@ -15540,8 +15589,10 @@ body {
 
 .btn-circle-success,
 .btn-circle-danger {
-  width: 30px; /* Ajusta el tamaño según sea necesario */
-  height: 30px; /* Ajusta el tamaño según sea necesario */
+  width: 30px;
+  /* Ajusta el tamaño según sea necesario */
+  height: 30px;
+  /* Ajusta el tamaño según sea necesario */
   border-radius: 50%;
   border: none;
   display: flex;
@@ -15553,32 +15604,42 @@ body {
 }
 
 .btn-circle-success {
-  background-color: #01643D; /* Verde */
+  background-color: #01643D;
+  /* Verde */
 }
 
 .btn-circle-danger {
-  background-color: #D80000; /* Rojo */
+  background-color: #D80000;
+  /* Rojo */
 }
 
 .btn-circle-success i,
 .btn-circle-danger i {
-  color: #ffffff; /* Color del icono */
+  color: #ffffff;
+  /* Color del icono */
 }
 
 /* Estilo del dropzone */
 .dropzone {
-    border: 2px dashed #4CAF50 !important; /* color de borde punteado */
-    border-radius: 10px !important; /* bordes redondeados */
-    padding: 20px !important;
-    background: white !important; /* fondo blanco */
-    text-align: center !important; /* texto centrado */
+  border: 2px dashed #4CAF50 !important;
+  /* color de borde punteado */
+  border-radius: 10px !important;
+  /* bordes redondeados */
+  padding: 20px !important;
+  background: white !important;
+  /* fondo blanco */
+  text-align: center !important;
+  /* texto centrado */
 }
 
 /* Estilo del mensaje por defecto en dropzone */
 .dropzone .dz-message {
-    color: #0a0a0a !important; /* color del texto */
-    font-size: 20px !important; /* tamaño del texto */
+  color: #0a0a0a !important;
+  /* color del texto */
+  font-size: 20px !important;
+  /* tamaño del texto */
 }
+
 .dz-button span {
   font-size: 12px;
 }
@@ -15589,21 +15650,28 @@ body {
 }
 
 .col-1 {
-  flex: 0 0 auto; /* Hace que el botón de la flecha tenga un ancho automático */
+  flex: 0 0 auto;
+  /* Hace que el botón de la flecha tenga un ancho automático */
 }
 
 .evento {
-  flex: 1; /* Hace que el texto ocupe el espacio restante */
-  text-align: center; /* Alinea el texto en el centro */
-  overflow: hidden; /* Oculta el desbordamiento de texto */
-  white-space: nowrap; /* Evita el salto de línea */
-  text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+  flex: 1;
+  /* Hace que el texto ocupe el espacio restante */
+  text-align: center;
+  /* Alinea el texto en el centro */
+  overflow: hidden;
+  /* Oculta el desbordamiento de texto */
+  white-space: nowrap;
+  /* Evita el salto de línea */
+  text-overflow: ellipsis;
+  /* Agrega puntos suspensivos si el texto es demasiado largo */
 }
 
 
 .btn-back:hover .fa-chevron-left {
   opacity: 1;
-  animation: bounce2 1s infinite alternate; /* Aplicar la animación de rebote al hacer hover */
+  animation: bounce2 1s infinite alternate;
+  /* Aplicar la animación de rebote al hacer hover */
   color: #0c4128;
 }
 
@@ -15611,9 +15679,11 @@ body {
   0% {
     transform: translateX(0);
   }
+
   50% {
     transform: translateX(-5px);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -15684,16 +15754,21 @@ body {
 .arrow.active .fa-angle-right {
   transform: rotate(90deg);
 }
+
 /* Estilos para el enlace de retorno */
 #return {
   cursor: pointer;
-  color: #093F2A; /* Color de texto predeterminado */
-  transition: color 0.3s, transform 0.3s; /* Transiciones suaves */
+  color: #093F2A;
+  /* Color de texto predeterminado */
+  transition: color 0.3s, transform 0.3s;
+  /* Transiciones suaves */
 }
 
 #return:hover {
-  color: #086611; /* Cambio de color al pasar el mouse */
-  transform: translateX(-0.3em); /* Movimiento suave hacia la izquierda */
+  color: #086611;
+  /* Cambio de color al pasar el mouse */
+  transform: translateX(-0.3em);
+  /* Movimiento suave hacia la izquierda */
 }
 
 .schoolList {
@@ -15731,10 +15806,11 @@ body {
 }
 
 .sendButton:hover {
-  transform: translateX(5px); /* Movimiento hacia la derecha al hacer hover */
+  transform: translateX(5px);
+  /* Movimiento hacia la derecha al hacer hover */
 }
 
-.loader-section{
+.loader-section {
   width: 100vw;
   height: 100vh;
   max-width: 100%;
@@ -15744,35 +15820,36 @@ body {
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-  z-index:999;
+  z-index: 999;
   transition: all 1s 1s ease-out;
-  opacity:1;
+  opacity: 1;
 }
 
-.loaded{
-  opacity:0;
-  z-index:-1;
+.loaded {
+  opacity: 0;
+  z-index: -1;
 }
-  
+
 .loader {
-    width: 48px;
-    height: 48px;
-    border: 5px solid #623ddb;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-    }
+  width: 48px;
+  height: 48px;
+  border: 5px solid #623ddb;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
 
 @keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-} 
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 .dashboard-hidden {
   display: none;
@@ -15782,9 +15859,11 @@ body {
   .back-logo {
     display: block !important;
   }
+
   .navbar-brand {
     padding: 3px !important;
   }
+
   .logo {
     display: none !important;
   }
@@ -15799,19 +15878,23 @@ body {
     transform: translateX(-100%);
     transition: transform 0.3s ease-out;
   }
-  
+
   .sidebar-collapse.show {
     transform: translateX(0);
   }
 
   .navbar {
-    background-color: #01643D;
+    background-color: #fff;
     border-radius: 0px 0px 0px 0px !important;
+  }
+
+  header {
+    display: block !important;
   }
 }
 
 .navbar {
-  background-color: #01643D;
+  background-color: #fff;
   border-radius: 0px 0px 20px 0px;
   z-index: 1052;
   padding-top: 0px !important;
@@ -15822,15 +15905,14 @@ body {
   position: fixed;
   top: 0;
   bottom: 0;
-  background-color: #01643D;
+  background-color: #fff;
   padding: 20px;
   z-index: 1060;
-  border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   min-width: 14rem;
 }
 
-.container.navbar-hidden {
+.navbar-hidden {
   display: none;
   padding-top: 1rem;
   padding-bottom: 1rem;
@@ -15842,10 +15924,11 @@ body {
 
 @keyframes spin {
   from {
-      transform: rotate(0deg);
+    transform: rotate(0deg);
   }
+
   to {
-      transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -15880,7 +15963,7 @@ body {
 }
 
 .menu-top {
-  color: #fff !important;
+  color: #000 !important;
 }
 
 .menu-top:hover {
@@ -15944,7 +16027,7 @@ body {
   transition: .3s all ease;
 }
 
-.btn-card:hover{
+.btn-card:hover {
   background-color: #CECECE !important;
   border-color: #CECECE !important;
   transform: translateY(-0.25em);
@@ -15952,23 +16035,24 @@ body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.btn-card:active{
+.btn-card:active {
   transform: translateY(-0.25em);
   border-radius: 10px 10px 10px 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-card-header {
-    padding: 5px;
-    font-size: 1.25rem;
-    border-top-left-radius: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+  padding: 5px;
+  font-size: 1.25rem;
+  border-top-left-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.datetime, .sorting_1 {
+.datetime,
+.sorting_1 {
   text-align: center;
 }
 
@@ -15994,7 +16078,8 @@ body {
   background-color: red;
   color: #fff;
   border-radius: 50%;
-  font-size: 1.5rem; /* Ajusta el tamaño de la "X" */
+  font-size: 1.5rem;
+  /* Ajusta el tamaño de la "X" */
   line-height: 1;
 }
 
@@ -16014,11 +16099,26 @@ a.disabled {
 }
 
 .description-text {
-  max-height: 60px;  /* Limitar a 3 líneas de texto aproximadamente */
+  max-height: 60px;
+  /* Limitar a 3 líneas de texto aproximadamente */
   overflow: hidden;
   position: relative;
 }
 
 .expanded {
-  max-height: none;  /* Permitir que se expanda completamente */
+  max-height: none;
+  /* Permitir que se expanda completamente */
+}
+
+header {
+  display: none;
+}
+
+.btn-logout {
+  color: #fff !important;
+  background-color: #f31515 !important;
+  border: 0;
+  transition: all 0.5s ease-in-out;
+  border-radius: 10px 10px 10px 10px;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }

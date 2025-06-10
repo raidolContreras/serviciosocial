@@ -7,7 +7,14 @@ $pagina = $pagina ? $pagina : 'inicio';
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['logged'])) {
     // Permitir el acceso a login o RegisterStudent sin estar logueado
-    if ($pagina == 'login' || $pagina == 'RegisterStudent') {
+    if ($pagina == 'login' || $pagina == 'inscripcionPracticas' || $pagina == 'inscripcionServicio' || $pagina == 'inscripcionEmpresas') {
+        if( $pagina == 'inscripcionServicio') {
+            $pagina = 'RegisterStudent';
+        } elseif ( $pagina == 'inscripcionPracticas') {
+            $pagina = 'practicas/RegisterPracticas';
+        } elseif ($pagina == 'inscripcionEmpresas') {
+            $pagina = 'practicas/RegisterEmpresas';
+        }
         include_once 'view/pages/'.$pagina.'.php';
     } else {
         // Redirigir al login si intenta acceder a otras páginas sin estar logueado

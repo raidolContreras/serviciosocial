@@ -4,11 +4,13 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use setasign\Fpdi\Fpdi;
 
-class FormsModel {
-    
-// Users
-    
-    static public function mdlRegisterUser($table, $data) {
+class FormsModel
+{
+
+    // Users
+
+    static public function mdlRegisterUser($table, $data)
+    {
         $stmt = Conexion::conectar()->prepare("INSERT INTO $table (firstname, lastname, email, password, role) VALUES (:firstname, :lastname, :email, :password, :role)");
         $stmt->bindParam(":firstname", $data["firstname"], PDO::PARAM_STR);
         $stmt->bindParam(":lastname", $data["lastname"], PDO::PARAM_STR);
@@ -16,31 +18,34 @@ class FormsModel {
         $stmt->bindParam(":password", $data["password"], PDO::PARAM_STR);
         $stmt->bindParam(":role", $data["role"], PDO::PARAM_STR);
         $response = $stmt->execute();
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlGetUsers() {
+    static public function mdlGetUsers()
+    {
         $stmt = Conexion::conectar()->prepare("SELECT id, firstname, lastname, email, role, created_at FROM users");
         $stmt->execute();
         $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlGetUserById($id) {
+    static public function mdlGetUserById($id)
+    {
         $stmt = Conexion::conectar()->prepare("SELECT id, firstname, lastname, email, role FROM users WHERE id = :id");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
         $response = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlUpdateUser($id, $firstname, $lastname, $email, $role) {
+    static public function mdlUpdateUser($id, $firstname, $lastname, $email, $role)
+    {
         $stmt = Conexion::conectar()->prepare("UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email, role = :role WHERE id = :id");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->bindParam(":firstname", $firstname, PDO::PARAM_STR);
@@ -48,66 +53,71 @@ class FormsModel {
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         $stmt->bindParam(":role", $role, PDO::PARAM_STR);
 
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
 
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDeleteUser($id) {
+    static public function mdlDeleteUser($id)
+    {
         $stmt = Conexion::conectar()->prepare("DELETE FROM users WHERE id = :id");
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
 
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
 
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlShowUser($table, $item, $value) {
+    static public function mdlShowUser($table, $item, $value)
+    {
         $stmt = Conexion::conectar()->prepare("SELECT * FROM $table u LEFT JOIN areas_users au ON au.idUser = u.id WHERE $item = :$item");
         $stmt->bindParam(":" . $item, $value, PDO::PARAM_STR);
         $stmt->execute();
         $response = $stmt->fetch();
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
-    
-    static public function mdlGradeStudent($data) {
+
+    static public function mdlGradeStudent($data)
+    {
         $stmt = Conexion::conectar()->prepare("UPDATE students SET points = points + :points WHERE id = :id");
         $stmt->bindParam(":points", $data["points"], PDO::PARAM_INT);
         $stmt->bindParam(":id", $data["id"], PDO::PARAM_INT);
         $response = $stmt->execute();
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
-    
-// Events
 
-    static public function mdlRegisterEvent($data) {
+    // Events
+
+    static public function mdlRegisterEvent($data)
+    {
         $stmt = Conexion::conectar()->prepare("INSERT INTO events (eventName, lastname, type, points) VALUES (:eventName, :lastname, :type, :points)");
         $stmt->bindParam(":eventName", $data["eventName"], PDO::PARAM_STR);
         $stmt->bindParam(":type", $data["type"], PDO::PARAM_STR);
         $stmt->bindParam(":points", $data["points"], PDO::PARAM_INT);
         $response = $stmt->execute();
-        $stmt -> closeCursor();
+        $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlGetEvents() {
+    static public function mdlGetEvents()
+    {
         $stmt = Conexion::conectar()->prepare("SELECT e.*, et.* FROM events e LEFT JOIN event_types et ON et.idEventType = e.eventTypeId LEFT JOIN courses c ON c.idCourse = e.idCourse");
         $stmt->execute();
         $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -116,7 +126,8 @@ class FormsModel {
         return $response;
     }
 
-    static public function mdlApplyEvent($idEvent, $idStudent) {
+    static public function mdlApplyEvent($idEvent, $idStudent)
+    {
         $stmt = Conexion::conectar()->prepare("INSERT INTO students_events (idEvent, idStudent) VALUES (:idEvent, :idStudent)");
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_INT);
@@ -126,7 +137,8 @@ class FormsModel {
         return $response;
     }
 
-    static public function mdlCheckApplicationEvent($idEvent, $idStudent) {
+    static public function mdlCheckApplicationEvent($idEvent, $idStudent)
+    {
         $stmt = Conexion::conectar()->prepare("SELECT * FROM students_events WHERE idEvent = :idEvent AND idStudent = :idStudent");
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_INT);
@@ -137,14 +149,15 @@ class FormsModel {
         return $response;
     }
 
-    static public function mdlAddEvent($eventTypeId, $eventName, $idUser, $date, $location, $start_time, $end_time, $points, $vacancies_available, $description) {
+    static public function mdlAddEvent($eventTypeId, $eventName, $idUser, $date, $location, $start_time, $end_time, $points, $vacancies_available, $description)
+    {
         $stmt = Conexion::conectar()->prepare("
             INSERT INTO events 
             (eventTypeId, eventName, idUser, date, location, start_time, end_time, points, vacancies_available, description, createdAt, idCourse) 
             VALUES 
             (:eventTypeId, :eventName, :idUser, :date, :location, :start_time, :end_time, :points, :vacancies_available, :description, NOW(), (SELECT idCourse FROM courses WHERE active = 1))
         ");
-    
+
         $stmt->bindParam(":eventTypeId", $eventTypeId, PDO::PARAM_INT);
         $stmt->bindParam(":eventName", $eventName, PDO::PARAM_STR);
         $stmt->bindParam(":idUser", $idUser, PDO::PARAM_INT);
@@ -155,13 +168,13 @@ class FormsModel {
         $stmt->bindParam(":points", $points, PDO::PARAM_INT);
         $stmt->bindParam(":vacancies_available", $vacancies_available, PDO::PARAM_INT);
         $stmt->bindParam(":description", $description, PDO::PARAM_STR);
-    
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
             $students = self::mdlSearchStudents(null);
-            foreach($students as $student) {
+            foreach ($students as $student) {
                 $points = self::mdlStudentPoints($student['idStudent']);
-                if($points['totalPoints'] < $points['degreeMinPoints'] && $student['status'] == 1) {
+                if ($points['totalPoints'] < $points['degreeMinPoints'] && $student['status'] == 1) {
                     // Mensaje personalizado
                     $message = "
                         <div style='font-family: Arial, sans-serif; line-height: 1.6; background-color: #f4f4f4; padding: 20px;'>
@@ -195,26 +208,27 @@ class FormsModel {
                             </div>
                         </div>";
 
-                        $event_types = self::mdlSearchEventTypes($eventTypeId);
+                    $event_types = self::mdlSearchEventTypes($eventTypeId);
 
-                        // Asunto del correo
-                        $subject = "Nuevo evento disponible para Servicio Social | " . $event_types['name'];
+                    // Asunto del correo
+                    $subject = "Nuevo evento disponible para Servicio Social | " . $event_types['name'];
 
-                        // Enviar correo
-                        mdlSendEmail($student['email'], $message, $subject);
+                    // Enviar correo
+                    mdlSendEmail($student['email'], $message, $subject);
                 }
-            }       
+            }
         } else {
             $response = "error";
         }
-    
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
-    
 
-    static public function mdlGetEventById($idEvent) {
+
+    static public function mdlGetEventById($idEvent)
+    {
         $stmt = Conexion::conectar()->prepare("SELECT idEvent, eventTypeId, eventName, date, location, start_time, end_time, points, vacancies_available, description FROM events WHERE idEvent = :idEvent");
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->execute();
@@ -224,7 +238,8 @@ class FormsModel {
         return $response;
     }
 
-    static public function mdlUpdateEvent($idEvent, $eventTypeId, $eventName, $date, $location, $start_time, $end_time, $points, $vacancies_available, $description) {
+    static public function mdlUpdateEvent($idEvent, $eventTypeId, $eventName, $date, $location, $start_time, $end_time, $points, $vacancies_available, $description)
+    {
         $stmt = Conexion::conectar()->prepare("UPDATE events SET eventTypeId = :eventTypeId, eventName = :eventName, date = :date, location = :location, start_time = :start_time, end_time = :end_time, points = :points, vacancies_available = :vacancies_available, description = :description WHERE idEvent = :idEvent");
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->bindParam(":eventTypeId", $eventTypeId, PDO::PARAM_INT);
@@ -237,7 +252,7 @@ class FormsModel {
         $stmt->bindParam(":vacancies_available", $vacancies_available, PDO::PARAM_INT);
         $stmt->bindParam(":description", $description, PDO::PARAM_STR);
 
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
@@ -248,11 +263,12 @@ class FormsModel {
         return $response;
     }
 
-    static public function mdlDeleteEvent($idEvent) {
+    static public function mdlDeleteEvent($idEvent)
+    {
         $stmt = Conexion::conectar()->prepare("DELETE FROM events WHERE idEvent = :idEvent");
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
 
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
@@ -263,9 +279,10 @@ class FormsModel {
         return $response;
     }
 
-// Courses
-    static public function mdlGetCourses($idCourse) {
-        
+    // Courses
+    static public function mdlGetCourses($idCourse)
+    {
+
         if ($idCourse == null) {
             $sql = "SELECT * FROM courses";
             $stmt = Conexion::conectar()->prepare($sql);
@@ -278,31 +295,33 @@ class FormsModel {
             $stmt->execute();
             $response = $stmt->fetch();
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlAddCourse($nameCourse, $startCourse, $endCourse) {
+    static public function mdlAddCourse($nameCourse, $startCourse, $endCourse)
+    {
         $stmt = Conexion::conectar()->prepare("INSERT INTO courses (nameCourse, startCourse, endCourse) VALUES (:nameCourse, :startCourse, :endCourse)");
 
         $stmt->bindParam(":nameCourse", $nameCourse, PDO::PARAM_STR);
         $stmt->bindParam(":startCourse", $startCourse, PDO::PARAM_STR);
         $stmt->bindParam(":endCourse", $endCourse, PDO::PARAM_STR);
 
-        if($stmt->execute()) {
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlGetCourseById($idCourse) {
+    static public function mdlGetCourseById($idCourse)
+    {
         $stmt = Conexion::conectar()->prepare("SELECT idCourse, nameCourse, startCourse, endCourse FROM courses WHERE idCourse = :idCourse");
         $stmt->bindParam(":idCourse", $idCourse, PDO::PARAM_INT);
         $stmt->execute();
@@ -312,58 +331,62 @@ class FormsModel {
         return $response;
     }
 
-    static public function mdlUpdateCourse($idCourse, $nameCourse, $startCourse, $endCourse) {
+    static public function mdlUpdateCourse($idCourse, $nameCourse, $startCourse, $endCourse)
+    {
         $stmt = Conexion::conectar()->prepare("UPDATE courses SET nameCourse = :nameCourse, startCourse = :startCourse, endCourse = :endCourse WHERE idCourse = :idCourse");
         $stmt->bindParam(":idCourse", $idCourse, PDO::PARAM_INT);
         $stmt->bindParam(":nameCourse", $nameCourse, PDO::PARAM_STR);
         $stmt->bindParam(":startCourse", $startCourse, PDO::PARAM_STR);
         $stmt->bindParam(":endCourse", $endCourse, PDO::PARAM_STR);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDeleteCourse($idCourse) {
+    static public function mdlDeleteCourse($idCourse)
+    {
         $stmt = Conexion::conectar()->prepare("DELETE FROM courses WHERE idCourse = :idCourse");
         $stmt->bindParam(":idCourse", $idCourse, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlActivateCourse($idCourse) {
+    static public function mdlActivateCourse($idCourse)
+    {
         $sql = "UPDATE courses SET active = 0;";
         $sql .= "UPDATE courses SET active = 1 WHERE idCourse = :idCourse;";
 
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idCourse", $idCourse, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlSearchAreas($idArea) {
+    static public function mdlSearchAreas($idArea)
+    {
         if ($idArea == null) {
             $sql = "SELECT * FROM areas";
             $stmt = Conexion::conectar()->prepare($sql);
@@ -376,62 +399,66 @@ class FormsModel {
             $stmt->execute();
             $response = $stmt->fetch();
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlEditArea($editArea, $nameArea) {
+    static public function mdlEditArea($editArea, $nameArea)
+    {
         $sql = "UPDATE areas SET nameArea = :nameArea WHERE idArea = :editArea";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":editArea", $editArea, PDO::PARAM_INT);
         $stmt->bindParam(":nameArea", $nameArea, PDO::PARAM_STR);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDeleteArea($idArea) {
+    static public function mdlDeleteArea($idArea)
+    {
         $sql = "DELETE FROM areas WHERE idArea = :idArea";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlAddArea($nameArea) {
+    static public function mdlAddArea($nameArea)
+    {
         $sql = "INSERT INTO areas (nameArea) VALUES (:nameArea)";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":nameArea", $nameArea, PDO::PARAM_STR);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlSearchEventTypes($idEventType) {
+    static public function mdlSearchEventTypes($idEventType)
+    {
         if ($idEventType == null) {
             $sql = "SELECT * FROM event_types et LEFT JOIN areas a on a.idArea = et.idArea";
             $stmt = Conexion::conectar()->prepare($sql);
@@ -444,13 +471,14 @@ class FormsModel {
             $stmt->execute();
             $response = $stmt->fetch();
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlEditEventTypes($editEventType, $name, $idArea, $pointsPerEvent, $benefitsPerYear) {
+    static public function mdlEditEventTypes($editEventType, $name, $idArea, $pointsPerEvent, $benefitsPerYear)
+    {
         $sql = "UPDATE event_types SET name = :name, idArea = :idArea, pointsPerEvent = :pointsPerEvent, benefitsPerYear = :benefitsPerYear WHERE idEventType = :editEventType";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":editEventType", $editEventType, PDO::PARAM_INT);
@@ -458,57 +486,60 @@ class FormsModel {
         $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
         $stmt->bindParam(":pointsPerEvent", $pointsPerEvent, PDO::PARAM_INT);
         $stmt->bindParam(":benefitsPerYear", $benefitsPerYear, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
-        $stmt->closeCursor();
-        $stmt = null;
-        return $response;
-    }
-    
-    static public function mdlDeleteEventTypes($idEventType) {
-        $sql = "DELETE FROM event_types WHERE idEventType = :idEventType";
-        $stmt = Conexion::conectar()->prepare($sql);
-        $stmt->bindParam(":idEventType", $idEventType, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
-            $response = "success";
-        } else {
-            $response = "error";
-        }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlAddEventTypes($name, $pointsPerEvent, $benefitsPerYear, $idArea) {
+    static public function mdlDeleteEventTypes($idEventType)
+    {
+        $sql = "DELETE FROM event_types WHERE idEventType = :idEventType";
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->bindParam(":idEventType", $idEventType, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            $response = "success";
+        } else {
+            $response = "error";
+        }
+
+        $stmt->closeCursor();
+        $stmt = null;
+        return $response;
+    }
+
+    static public function mdlAddEventTypes($name, $pointsPerEvent, $benefitsPerYear, $idArea)
+    {
         $sql = "INSERT INTO event_types (name, pointsPerEvent, benefitsPerYear, idArea) VALUES (:name, :pointsPerEvent, :benefitsPerYear, :idArea)";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":name", $name, PDO::PARAM_STR);
         $stmt->bindParam(":pointsPerEvent", $pointsPerEvent, PDO::PARAM_INT);
         $stmt->bindParam(":benefitsPerYear", $benefitsPerYear, PDO::PARAM_INT);
         $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    public static function mdlRegisterStudent($data) {
+    public static function mdlRegisterStudent($data)
+    {
         try {
-            $stmt = Conexion::conectar()->prepare("INSERT INTO student(matricula, firstname, lastname, lastnameMom, idDegree, grado, email, phone, emergenci_phone, parent, type_lic, street, nInt, nExt, colony, cp, dayBirthday, monthBirthday, yearBirthday, gender, idCourse) VALUES (:matricula, :firstname, :lastname, :lastnameMom, :idDegree, :grado, :email, :phone, :emergenci_phone, :parent, :type_lic, :street, :nInt, :nExt, :colony, :cp, :dayBirthday, :monthBirthday, :yearBirthday, :gender, (SELECT idCourse FROM courses WHERE active = 1))");
-            
+            $stmt = Conexion::conectar()->prepare("INSERT INTO student(matricula, firstname, lastname, lastnameMom, idDegree, grado, email, phone, emergenci_phone, parent, type_lic, street, nInt, nExt, colony, cp, dayBirthday, monthBirthday, yearBirthday, gender, idCourse, type) VALUES (:matricula, :firstname, :lastname, :lastnameMom, :idDegree, :grado, :email, :phone, :emergenci_phone, :parent, :type_lic, :street, :nInt, :nExt, :colony, :cp, :dayBirthday, :monthBirthday, :yearBirthday, :gender, (SELECT idCourse FROM courses WHERE active = 1), :type)");
+
             $stmt->bindParam(':matricula', $data['matricula'], PDO::PARAM_STR);
             $stmt->bindParam(':firstname', $data['nombre'], PDO::PARAM_STR);
             $stmt->bindParam(':lastname', $data['apellidoP'], PDO::PARAM_STR);
@@ -529,13 +560,14 @@ class FormsModel {
             $stmt->bindParam(':monthBirthday', $data['mesNacimiento'], PDO::PARAM_INT);
             $stmt->bindParam(':yearBirthday', $data['anioNacimiento'], PDO::PARAM_INT);
             $stmt->bindParam(':gender', $data['genero'], PDO::PARAM_INT);
-
+            $stmt->bindParam(':type', $data['type'], PDO::PARAM_STR);
+            
             if ($stmt->execute()) {
                 return "success";
             } else {
                 print_r($stmt);
             }
-        }catch (PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->getCode() == 23000) { // Código de error para entrada duplicada
                 $response = "duplicate";
             } else {
@@ -549,10 +581,11 @@ class FormsModel {
         return $response;
     }
 
-    public static function mdlEditStudent($data) {
+    public static function mdlEditStudent($data)
+    {
         try {
             $stmt = Conexion::conectar()->prepare("UPDATE student SET matricula = :matricula, firstname = :firstname, lastname = :lastname, idDegree = :idDegree, grado = :grado, email = :email, phone = :phone, emergenci_phone = :emergenci_phone, parent = :parent, type_lic = :type_lic, street = :street, nInt = :nInt, nExt = :nExt, colony = :colony, cp = :cp, dayBirthday = :dayBirthday, monthBirthday = :monthBirthday, yearBirthday = :yearBirthday, gender = :gender WHERE idStudent = :idStudent");
-            
+
             $stmt->bindParam(':matricula', $data['matricula'], PDO::PARAM_STR);
             $stmt->bindParam(':firstname', $data['nombre'], PDO::PARAM_STR);
             $stmt->bindParam(':lastname', $data['apellidos'], PDO::PARAM_STR);
@@ -573,27 +606,27 @@ class FormsModel {
             $stmt->bindParam(':yearBirthday', $data['anioNacimiento'], PDO::PARAM_INT);
             $stmt->bindParam(':gender', $data['genero'], PDO::PARAM_INT);
             $stmt->bindParam(':idStudent', $data['idStudent'], PDO::PARAM_INT);
-            
+
             if ($stmt->execute()) {
-                return "success";
+                $response = "success";
             } else {
-                return "error update";
+                $response = "error update";
             }
-        }catch (PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->getCode() == 23000) { // Código de error para entrada duplicada
                 $response = "duplicate";
             } else {
-                $response = "error".$e->getCode();
+                $response = "error" . $e->getCode();
             }
         }
 
         $stmt->closeCursor();
         $stmt = null;
         return $response;
-
     }
-    
-    static public function mdlSearchStudents($idStudent) {
+
+    static public function mdlSearchStudents($idStudent)
+    {
         if ($idStudent == null) {
             $sql = "SELECT * FROM student s LEFT JOIN courses c ON c.idCourse = s.idCourse LEFT JOIN degrees d ON d.idDegree = s.idDegree";
             $stmt = Conexion::conectar()->prepare($sql);
@@ -606,108 +639,115 @@ class FormsModel {
             $stmt->execute();
             $response = $stmt->fetch();
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlAcceptStudent($idStudent) {
+    static public function mdlAcceptStudent($idStudent)
+    {
         $sql = "UPDATE student SET accepted = 1 WHERE idStudent = :idStudent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_STR);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDenegateStudent($idStudent) {
+    static public function mdlDenegateStudent($idStudent)
+    {
         $sql = "DELETE FROM student WHERE idStudent = :idStudent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_STR);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDropStudent($idStudent, $comments) {
+    static public function mdlDropStudent($idStudent, $comments)
+    {
         $sql = "UPDATE student SET status = 0, comments = :comments, password = '' WHERE idStudent = :idStudent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_STR);
         $stmt->bindParam(":comments", $comments, PDO::PARAM_STR);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlAddPasswordStudent($cryptPass, $student) {
+    static public function mdlAddPasswordStudent($cryptPass, $student)
+    {
         $sql = "UPDATE student SET password = :password WHERE idStudent = :student";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":password", $cryptPass, PDO::PARAM_STR);
         $stmt->bindParam(":student", $student, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlGetStudent($email) {
+    static public function mdlGetStudent($email)
+    {
         $sql = "SELECT * FROM student WHERE email = :email";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":email", $email, PDO::PARAM_STR);
         $stmt->execute();
         $response = $stmt->fetch();
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlAddDegree($data) {
+    static public function mdlAddDegree($data)
+    {
         $sql = "INSERT INTO degrees (nameDegree, minPoints) VALUES (:nameDegree, :minPoints);";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":nameDegree", $data["nameDegree"], PDO::PARAM_STR);
         $stmt->bindParam(":minPoints", $data["minPoints"], PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlSearchDegrees($idDegree) {
+    static public function mdlSearchDegrees($idDegree)
+    {
         if ($idDegree == null) {
             $sql = "SELECT * FROM degrees order by nameDegree asc";
             $stmt = Conexion::conectar()->prepare($sql);
@@ -720,13 +760,14 @@ class FormsModel {
             $stmt->execute();
             $response = $stmt->fetch();
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlSearchEvents($idEvent) {
+    static public function mdlSearchEvents($idEvent)
+    {
         if ($idEvent == null) {
             $sql = "SELECT * FROM events ORDER BY dateEvent ASC";
             $stmt = Conexion::conectar()->prepare($sql);
@@ -739,37 +780,40 @@ class FormsModel {
             $stmt->execute();
             $response = $stmt->fetch();
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlStudentEvents($idEvent) {
+    static public function mdlStudentEvents($idEvent)
+    {
         $sql = "SELECT SUM(1) AS students FROM students_events WHERE idEvent = :idEvent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->execute();
         $response = $stmt->fetch();
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlEventsCandidates($idEvent) {
+    static public function mdlEventsCandidates($idEvent)
+    {
         $sql = "SELECT s.idStudent, s.firstname, s.lastname, s.email, s.phone, e.*, se.* FROM students_events se LEFT JOIN student s ON s.idStudent = se.idStudent LEFT JOIN events e ON e.idEvent = se.idEvent WHERE se.idEvent = :idEvent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->execute();
         $response = $stmt->fetchAll();
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlUsersToAreas($idArea) {
+    static public function mdlUsersToAreas($idArea)
+    {
         $sql = "SELECT 
                     u.id AS idUser, 
                     u.firstname, 
@@ -789,19 +833,20 @@ class FormsModel {
         $stmt->bindParam(":idArea", $idArea, PDO::PARAM_INT);
         $stmt->execute();
         $response = $stmt->fetchAll();
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlUpdateUsersToAreas($idArea, $idUser) {
+    static public function mdlUpdateUsersToAreas($idArea, $idUser)
+    {
         $sqlInsert = "INSERT INTO areas_users (idUser, idArea) VALUES (:idUser, :idArea) ON DUPLICATE KEY UPDATE idArea = :idArea";
         $stmtInsert = Conexion::conectar()->prepare($sqlInsert);
         $stmtInsert->bindParam(":idUser", $idUser, PDO::PARAM_INT);
         $stmtInsert->bindParam(":idArea", $idArea, PDO::PARAM_INT);
 
-        if($stmtInsert->execute()) {
+        if ($stmtInsert->execute()) {
             $response = "success";
         } else {
             $response = "error";
@@ -812,7 +857,8 @@ class FormsModel {
         return $response;
     }
 
-    static public function mdlSearchUsers($idUser) {
+    static public function mdlSearchUsers($idUser)
+    {
         if ($idUser == null) {
             $sql = "SELECT * FROM users ORDER BY firstname ASC";
             $stmt = Conexion::conectar()->prepare($sql);
@@ -825,61 +871,65 @@ class FormsModel {
             $stmt->execute();
             $response = $stmt->fetch();
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlAcceptCandidate($idStudent, $idEvent, $idUser) {
+    static public function mdlAcceptCandidate($idStudent, $idEvent, $idUser)
+    {
         $sql = "UPDATE students_events SET status = 1, idUser = :idUser, statusEvent = 1, points = 0 WHERE idStudent = :idStudent AND idEvent = :idEvent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_INT);
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->bindParam(":idUser", $idUser, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDeclineCandidate($idStudent, $idEvent, $idUser) {
+    static public function mdlDeclineCandidate($idStudent, $idEvent, $idUser)
+    {
         $sql = "UPDATE students_events SET status = 2, idUser = :idUser, statusEvent = 0, points = 0 WHERE idStudent = :idStudent AND idEvent = :idEvent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_INT);
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->bindParam(":idUser", $idUser, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlGetPointsEvent($idEvent) {
+    static public function mdlGetPointsEvent($idEvent)
+    {
         $sql = "SELECT points FROM events WHERE idEvent = :idEvent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->execute();
         $response = $stmt->fetch();
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlApproveEvent($idStudent, $idEvent, $idUser, $points) {
+    static public function mdlApproveEvent($idStudent, $idEvent, $idUser, $points)
+    {
         $sql = "UPDATE students_events 
                 SET 
                     status = 2, 
@@ -896,37 +946,39 @@ class FormsModel {
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->bindParam(":idUser", $idUser, PDO::PARAM_INT);
         $stmt->bindParam(":points", $points, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDeclineEvent($idStudent, $idEvent, $idUser) {
+    static public function mdlDeclineEvent($idStudent, $idEvent, $idUser)
+    {
         $sql = "UPDATE students_events SET status = 3, idUser = :idUser, statusEvent = 0, points = 0 WHERE idStudent = :idStudent AND idEvent = :idEvent";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_INT);
         $stmt->bindParam(":idEvent", $idEvent, PDO::PARAM_INT);
         $stmt->bindParam(":idUser", $idUser, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlStudentEventsPoints($idStudent) {
+    static public function mdlStudentEventsPoints($idStudent)
+    {
         $sql = "SELECT se.points, se.idEvent, e.eventName, 
                 (SELECT d.minPoints FROM degrees d LEFT JOIN student s ON s.idDegree = d.idDegree WHERE s.idStudent = :idStudent ) as minPoints
                     FROM students_events se 
@@ -936,13 +988,14 @@ class FormsModel {
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_INT);
         $stmt->execute();
         $response = $stmt->fetchAll();
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlStudentPoints ($idStudent) {
+    static public function mdlStudentPoints($idStudent)
+    {
         $sql = "SELECT 
                     SUM(se.points) as totalPoints,
                     (SELECT d.minPoints 
@@ -959,41 +1012,43 @@ class FormsModel {
         $stmt->bindParam(":idStudent", $idStudent, PDO::PARAM_INT);
         $stmt->execute();
         $response = $stmt->fetch();
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlEditDegree($data) {
+    static public function mdlEditDegree($data)
+    {
         $sql = "UPDATE degrees SET nameDegree=:nameDegree,minPoints=:minPoints WHERE idDegree = :idDegree";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":nameDegree", $data['nameDegree'], PDO::PARAM_STR);
         $stmt->bindParam(":minPoints", $data['minPoints'], PDO::PARAM_INT);
         $stmt->bindParam(":idDegree", $data['idDegree'], PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
     }
 
-    static public function mdlDeleteDegree($idDegree) {
+    static public function mdlDeleteDegree($idDegree)
+    {
         $sql = "DELETE FROM degrees WHERE idDegree = :idDegree";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->bindParam(":idDegree", $idDegree, PDO::PARAM_INT);
-        
-        if($stmt->execute()) {
+
+        if ($stmt->execute()) {
             $response = "success";
         } else {
             $response = "error";
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
         return $response;
@@ -1001,14 +1056,16 @@ class FormsModel {
 }
 
 
-class FormsModelPDF {
+class FormsModelPDF
+{
 
-    static public function mdlEndSocialService($student, $degree) {// Cargar el PDF original
+    static public function mdlEndSocialService($student, $degree)
+    { // Cargar el PDF original
         $pdf = new Fpdi();
 
         $numeroATexto = numeroATexto($student['grado']);
-        $gradoAcademico = ($student['type_lic'] == 'cuatrimestral') ? $numeroATexto. ' cuatrimestre' : $numeroATexto. ' sementre';
-        
+        $gradoAcademico = ($student['type_lic'] == 'cuatrimestral') ? $numeroATexto . ' cuatrimestre' : $numeroATexto . ' sementre';
+
         // Establecer márgenes más pequeños (0 para que no haya margen)
         $pdf->SetMargins(5, 5, 5); // Izquierdo, Superior, Derecho
         require_once __DIR__ . '/../vendor/autoload.php';
@@ -1017,68 +1074,68 @@ class FormsModelPDF {
         $pageCount = $pdf->setSourceFile(__DIR__ . '/../view/assets/documents/Formato_Solicitud-Registro-1.pdf');
         $templateId = $pdf->importPage(1);
         $size = $pdf->getTemplateSize($templateId);
-        
+
         // Añadir una página con el tamaño exacto del contenido
         $pdf->AddPage($size['orientation'], array($size['width'], $size['height']));
-        
+
         // Usar la plantilla del PDF original con las dimensiones correctas
         $pdf->useTemplate($templateId, 0, 0, $size['width'], $size['height']);
-        
+
         // Configurar la fuente para el texto
         $pdf->SetFont('Helvetica', '', 7);
-        
+
         // Llenar campos de texto con conversión a ISO-8859-1 para evitar problemas de codificación
         $pdf->SetXY(25, 43.5); // Coordenadas aproximadas del campo "Apellido Paterno"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', mb_strtoupper($student['lastname'])));
-        
+
         $pdf->SetXY(72, 43.5); // Coordenadas aproximadas del campo "Apellido Materno"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', mb_strtoupper($student['lastnameMom'])));
-        
+
         $pdf->SetXY(113, 43.5); // Coordenadas aproximadas del campo "Nombre"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', mb_strtoupper($student['firstname'])));
-        
+
         $pdf->SetXY(25, 54); // Coordenadas aproximadas del campo "Calle y número"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', mb_strtoupper($student['street'] . ' ' . $student['nInt'] . ' ' . $student['nExt'])));
-        
+
         $pdf->SetXY(72, 54); // Coordenadas aproximadas del campo "Colonia"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', mb_strtoupper($student['colony'])));
-        
-        $pdf->SetXY(113 , 54); // Coordenadas aproximadas del campo "Población"
+
+        $pdf->SetXY(113, 54); // Coordenadas aproximadas del campo "Población"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', mb_strtoupper('Michoacán')));
-        
+
         $pdf->SetXY(25, 64.5); // Coordenadas aproximadas del campo "Teléfono"
         $pdf->Write(0, $student['phone']);
-        
+
         $pdf->SetXY(95, 64.5); // Coordenadas aproximadas del campo "correo"
         $pdf->Write(0, $student['email']);
-        
+
         $pdf->SetXY(25, 71.8); // Coordenadas aproximadas del campo "Carrera"
         $pdf->Write(0, mb_strtoupper($degree['nameDegree']));
-        
+
         $pdf->SetXY(166, 71.8); // Coordenadas aproximadas del campo "Año o semestre concluido"
         $pdf->Write(0, mb_strtoupper($gradoAcademico));
-        
+
         $pdf->SetXY(54, 79); // Coordenadas aproximadas del campo "Nombre de la institución"
         $pdf->Write(0, 'UNIVERSIDAD MONTRER');
-        
+
         $pdf->SetXY(174, 64.5); // Coordenadas aproximadas del campo "Dia"
         $pdf->Write(0, $student['dayBirthday']);
-        
+
         $pdf->SetXY(184, 64.5); // Coordenadas aproximadas del campo "Més"
         $pdf->Write(0, $student['monthBirthday']);
-        
+
         $pdf->SetXY(193, 64.5); // Coordenadas aproximadas del campo "Año"
         $pdf->Write(0, $student['yearBirthday']);
-        
+
         $pdf->SetXY(25, 90); // Coordenadas aproximadas del campo "Datos del programa (NOMBRE)"
         $pdf->Write(0, 'PROGRAMA GENERAL DE SERVICIO SOCIAL DE UNIVERSIDAD MONTRER');
-        
+
         $pdf->SetXY(58, 101); // Coordenadas aproximadas del campo "Datos del programa (ACTIVIDADES)"
         $pdf->Write(0, 'APOYO EN ACTIVIDADES ACADEMICAS');
-        
+
         $pdf->SetXY(157, 112.5); // Coordenadas aproximadas del campo "Datos del programa (HORARIO)"
         $pdf->Write(0, '8:00 A 12:00 HRS.');
-        
+
         $fechaInicio = new DateTime();
 
         // Clonar la fecha de inicio para obtener la fecha de término
@@ -1108,31 +1165,31 @@ class FormsModelPDF {
 
         $pdf->SetXY(130, 116); // Coordenadas aproximadas del campo "Datos del programa (AÑO TERMINO)"
         $pdf->Write(0, $fechaTermino->format('Y'));
-        
+
         $pdf->SetXY(50, 124.5); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, '480');
-        
+
         $pdf->SetXY(145, 124.5); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, 'UNIVERSIDAD MONTRER');
-        
+
         $pdf->SetXY(52, 130); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, 'UNIVERSIDAD MONTRER');
-        
+
         $pdf->SetXY(38, 135.3); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, 'SERVICIO SOCIAL');
-        
+
         $pdf->SetXY(54, 140.3); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', 'AV. LAZARO CARDENAS 1760'));
-        
+
         $pdf->SetXY(98, 140.3); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', 'CHAPULTEPEC SUR'));
-        
+
         $pdf->SetXY(155, 140.3); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', 'MORELIA, MICHOACÁN'));
-        
+
         $pdf->SetXY(68, 151.3); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', 'OSCAR LOPEZ GARCIA'));
-        
+
         $pdf->SetXY(162.5, 179); // Coordenadas aproximadas del campo "Datos del programa (HORAS)"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', 'OSCAR LOPEZ GARCIA'));
 
@@ -1154,19 +1211,19 @@ class FormsModelPDF {
         $pdf->SetXY($posicionX, 179); // Coordenadas Y especificadas
         $pdf->Write(0, $textoConvertido);
 
-        
+
         // Configurar la fuente para el texto
         $pdf->SetFont('Helvetica', '', 5);
-        
+
         $pdf->SetXY(23, 96); // Coordenadas aproximadas del campo "Datos del programa (OBJETIVO)"
         $pdf->Write(0, iconv('UTF-8', 'ISO-8859-1', 'CONTRIBUIR EN LA FORMACION PROFESIONAL DE LOS ESTUDIANTES DEL ESTADO DE MICHOACAN A TRAVES DE LA CREACION DE ESPACIOS QUE LES PERMITAN INTEGRARSE A UN AMBIENTE DE TRABAJO'));
-        
+
         // Usar la fuente ZapfDingbats para insertar una casilla de verificación
-        $pdf->SetFont('ZapfDingbats','', 8);
-        
+        $pdf->SetFont('ZapfDingbats', '', 8);
+
         $pdf->SetXY(50, 157);
-        $pdf->Write(0, '4'); 
-        
+        $pdf->Write(0, '4');
+
         if ($student['gender'] == 2) {
             // Colocar la segunda casilla de verificación en una posición ajustada
             $pdf->SetXY(199, 44); // Coordenadas ajustadas para la casilla de verificación para "Sexo: F"
@@ -1176,16 +1233,17 @@ class FormsModelPDF {
             $pdf->SetXY(190, 44); // Coordenadas aproximadas de la casilla de verificación para "Sexo: M"
             $pdf->Write(0, '4'); // '4' en ZapfDingbats es una marca de verificación
         }
-            
+
         // Puedes agregar más campos de esta manera, ajustando las coordenadas
         // Guarda el nuevo archivo PDF
-        $pdf->Output('F', __DIR__ . '/../view/assets/documents/output/'.$texto.'.pdf');
-        return $texto.'.pdf'; // Devuelve el nombre del archivo PDF generado
-        
+        $pdf->Output('F', __DIR__ . '/../view/assets/documents/output/' . $texto . '.pdf');
+        return $texto . '.pdf'; // Devuelve el nombre del archivo PDF generado
+
     }
-    
-    static public function getAceptationCard($student, $degree) {
-        
+
+    static public function getAceptationCard($student, $degree)
+    {
+
         $month = 6;
         $fechaInicio = new DateTime();
         $fechaTermino = clone $fechaInicio;
@@ -1197,9 +1255,9 @@ class FormsModelPDF {
             $month = 12;
             $fechaTermino->modify('+12 months');
         }
-        
+
         $numeroATexto = numeroATexto($student['grado']);
-        $gradoAcademico = ($student['type_lic'] == 'cuatrimestral') ? $numeroATexto. ' cuatrimestre' : $numeroATexto. ' sementre';
+        $gradoAcademico = ($student['type_lic'] == 'cuatrimestral') ? $numeroATexto . ' cuatrimestre' : $numeroATexto . ' sementre';
 
         // Configurar la localización para fechas en español
         setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'Spanish_Spain');
@@ -1294,15 +1352,15 @@ class FormsModelPDF {
         $pdf->SetFont('Helvetica', '', 12);
         $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', " HORAS en un periodo de "));
         $pdf->SetFont('Helvetica', 'B', 12);
-        $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', $month .' MESES'));
+        $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', $month . ' MESES'));
         $pdf->SetFont('Helvetica', '', 12);
         $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', " comprendido del "));
         $pdf->SetFont('Helvetica', 'B', 12);
-        $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', $fechaInicio->format('d')."/".$fechaInicio->format('m')."/".$fechaInicio->format('y')));
+        $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', $fechaInicio->format('d') . "/" . $fechaInicio->format('m') . "/" . $fechaInicio->format('y')));
         $pdf->SetFont('Helvetica', '', 12);
         $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', " al "));
         $pdf->SetFont('Helvetica', 'B', 12);
-        $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', $fechaTermino->format('d')."/".$fechaTermino->format('m')."/".$fechaTermino->format('y')));
+        $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', $fechaTermino->format('d') . "/" . $fechaTermino->format('m') . "/" . $fechaTermino->format('y')));
         $pdf->SetFont('Helvetica', '', 12);
         $pdf->Write(7, iconv('UTF-8', 'ISO-8859-1', ".
 
@@ -1313,10 +1371,10 @@ Sin otro asunto en particular, agradezco de antemano la atención que se sirva b
         $pdf->Output('F', __DIR__ . '/../view/assets/documents/output/' . $filename);
         return $filename;
     }
-
 }
 
-function numeroATexto($numero) {
+function numeroATexto($numero)
+{
     $numerosEnTexto = [
         1 => 'Primero',
         2 => 'Segundo',
@@ -1340,13 +1398,14 @@ use PHPMailer\PHPMailer\Exception;
 
 require  __DIR__ . '/../vendor/autoload.php';
 
-function mdlSendEmail($recipientEmail, $message, $subject) {
-    
+function mdlSendEmail($recipientEmail, $message, $subject)
+{
+
     // Cabeceras del correo
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= "From: no-reply@unimontrer.edu.mx" . "\r\n";
-    
+
     $mail = new PHPMailer(true);
 
     try {
@@ -1360,14 +1419,14 @@ function mdlSendEmail($recipientEmail, $message, $subject) {
         $mail->Port = 587;
 
         // Configuración del remitente y destinatario
-		$mail->setFrom('unimontrer@devosco.io', 'UNIMO');
+        $mail->setFrom('unimontrer@devosco.io', 'UNIMO');
         $mail->addAddress($recipientEmail); // Añadir destinatario
-        
+
         // Contenido del correo
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $message;
-        $mail->CharSet= 'UTF-8';
+        $mail->CharSet = 'UTF-8';
 
         // Enviar correo
         $mail->send();
@@ -1377,5 +1436,81 @@ function mdlSendEmail($recipientEmail, $message, $subject) {
         echo "Error al enviar correo: {$mail->ErrorInfo}";
         return false;
     }
-    
+}
+
+class SilModel
+{
+    static public function mdlSearchStudentSIL($matricula)
+    {
+        $sql = "SELECT 
+                    a.*, 
+                    o.nombre       AS nameOferta, 
+                    p.nombre_periodo,
+                    f.TipoFamiliar,
+                    f.Nombre       AS Familiar_Nombre,
+                    f.Apellido1    AS Familiar_Apellido1,
+                    f.Apellido2    AS Familiar_Apellido2,
+                    f.Telefono     AS Familiar_Telefono,
+                    f.Direccion    AS Familiar_Direccion,
+                    f.CP           AS Familiar_CP,
+                    f.Numero       AS Familiar_Numero,
+                    f.Vive         AS Familiar_Vive,
+                    f.Email        AS Familiar_Email
+                FROM alumno a
+                LEFT JOIN inscripcion i 
+                    ON a.id = i.idAlumno
+                LEFT JOIN nivel n 
+                    ON n.id = i.idNivel
+                LEFT JOIN oferta o 
+                    ON o.id = i.idOferta
+                LEFT JOIN periodo p 
+                    ON p.id_periodo = o.idPeriodo
+                LEFT JOIN alumno_familia af 
+                    ON a.id = af.idAlumno
+                CROSS APPLY (
+                    SELECT TOP 1
+                        v.TipoFamiliar,
+                        v.Nombre,    v.Apellido1,  v.Apellido2,
+                        v.Telefono,  v.Direccion,  v.CP,
+                        v.Numero,    v.Vive,       v.Email
+                    FROM (VALUES
+                        ('Padre',
+                        af.nombrePapa,    af.apellido1Papa,  af.apellido2Papa,
+                        af.telefonoPapa,  af.direccionPapa,   af.cpPapa,
+                        af.numPapa,       af.vivePapa,        af.emailPapa),
+                        ('Madre',
+                        af.nombreMama,    af.apellido1Mama,  af.apellid2Mama,
+                        af.telefonoMama,  af.direccionMama,   af.cpMama,
+                        af.numMama,       af.viveMama,        af.emailMama),
+                        ('Tutor',
+                        af.nombreTutor,   af.apellido1Tutor, af.apellido2Tutor,
+                        af.telefonoTutor, af.direccionTutor,  af.cpTutor,
+                        af.numTutor,      NULL,               af.emailTutor)
+                    ) AS v(
+                        TipoFamiliar,
+                        Nombre,   Apellido1,  Apellido2,
+                        Telefono, Direccion,  CP,
+                        Numero,   Vive,       Email
+                    )
+                    WHERE 
+                        v.Nombre    IS NOT NULL AND LTRIM(RTRIM(v.Nombre))    <> '' AND
+                        v.Telefono  IS NOT NULL AND LTRIM(RTRIM(v.Telefono))  <> '' AND
+                        v.Direccion IS NOT NULL AND LTRIM(RTRIM(v.Direccion)) <> ''
+                    ORDER BY 
+                        CASE v.TipoFamiliar 
+                            WHEN 'Padre' THEN 1 
+                            WHEN 'Madre' THEN 2 
+                            WHEN 'Tutor' THEN 3 
+                        END
+                ) AS f
+                WHERE a.matricula = :matricula";
+        $stmt = Conexion::conectarSIL()->prepare($sql);
+        $stmt->bindParam(":matricula", $matricula, PDO::PARAM_STR);
+        $stmt->execute();
+        $response = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+        return $response;
+    }
 }

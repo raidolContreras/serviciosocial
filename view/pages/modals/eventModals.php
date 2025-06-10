@@ -75,7 +75,7 @@
                                     <th width="40%">Nombre del Tipo de Evento</th>
                                     <th width="20%">Area encargada</th>
                                     <th width="10%">Puntos por Evento</th>
-                                    <th width="10%">Beneficios por Año</th>
+                                    <th width="10%">Prestadores por Año</th>
                                     <th width="10%">Acciones</th>
                                 </tr>
                             </thead>
