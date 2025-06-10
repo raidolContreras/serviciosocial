@@ -130,44 +130,139 @@
     }
 </style>
 
-<div class="container-fluid">
-    <div class="row mb-4">
-        <div class="col-12">
-            <strong id='namePage'>Tablero de Eventos</strong>
-        </div>
-    </div>
-
+<div class="container-fluid card">
     <div class="row float-right">
         <?php if ($role == 'Estudiante'): ?>
-
-            <div class="col-md-8">
-                <!-- Puntos totales -->
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="card-subtitle">Puntos Totales</h6>
-                        <p class="card-text" id="totalPoints">0 puntos</p>
+            <?php if ($type == 'universidad'): ?>
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <strong id='namePage'>Tablero de Eventos</strong>
                     </div>
                 </div>
 
-                <!-- Sección adicional para eventos o contenido -->
-                <div class="mt-4 events row">
-                    <!-- Aquí puedes añadir contenido adicional o dinámico -->
-                </div>
-            </div>
+                <div class="col-md-8">
+                    <!-- Puntos totales -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle">Puntos Totales</h6>
+                            <p class="card-text" id="totalPoints">0 puntos</p>
+                        </div>
+                    </div>
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h6 class="events-header">Eventos Asistidos</h6>
-                        <ul class="list-group" id="eventList">
-                            <!-- Aquí se llenará la lista de eventos con JavaScript -->
-                            <li class="list-group-item">No has asistido a ningún evento aún.</li>
-                        </ul>
+                    <!-- Sección adicional para eventos o contenido -->
+                    <div class="mt-4 events row">
+                        <!-- Aquí puedes añadir contenido adicional o dinámico -->
                     </div>
                 </div>
-            </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="events-header">Eventos Asistidos</h6>
+                            <ul class="list-group" id="eventList">
+                                <!-- Aquí se llenará la lista de eventos con JavaScript -->
+                                <li class="list-group-item">No has asistido a ningún evento aún.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <!-- HTML -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <strong id="namePage">Sistema de Servicio social</strong>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <table id="tblOrganismosReceptores" class="table table-striped table-bordered" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Organismo Receptor</th>
+                                <th>Responsable</th>
+                                <th>Domicilio</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Se llenará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Para almacenar y mostrar la selección -->
+                <input type="hidden" id="selectedOrganismoId">
+                <p>Organismo seleccionado: <span id="selectedOrganismoName">Ninguno</span></p>
+
+                <script>
+                    $(document).ready(function () {
+                        // Inicializa el DataTable vacío con columna de acción
+                        let table = $('#tblOrganismosReceptores').DataTable({
+                            columns: [
+                                { data: 'idUR', title: 'ID' },
+                                { data: 'nameUR', title: 'Organismo Receptor' },
+                                { data: 'responsable', title: 'Responsable' },
+                                { data: 'domicilio', title: 'Domicilio' },
+                                {
+                                    data: null,
+                                    title: 'Acción',
+                                    render: function () {
+                                        return '<button class="btn btn-sm btn-primary select-btn">Seleccionar</button>';
+                                    }
+                                }
+                            ],
+                            language: {
+                                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json'
+                            },
+                            pageLength: 10,
+                            lengthChange: false
+                        });
+
+                        function organismosReceptores() {
+                            $.ajax({
+                                url: 'controller/ajax/ajax.forms.php',
+                                type: 'POST',
+                                data: { search: 'organismos_receptores' },
+                                dataType: 'json',
+                                success: function (response) {
+                                    table.clear().rows.add(response).draw();
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error al obtener organismos:', error);
+                                }
+                            });
+                        }
+
+                        organismosReceptores();
+
+                        // Manejo de click en botón Seleccionar
+                        $('#tblOrganismosReceptores tbody').on('click', '.select-btn', function () {
+                            let $tr = $(this).closest('tr');
+                            let data = table.row($tr).data();
+                            let nombre = data.nameUR;
+
+                            if (confirm(`¿Está seguro de elegir la unidad receptora:\n\n${nombre}?`)) {
+                                // Desmarcamos cualquier selección anterior
+                                table.$('tr.selected').removeClass('selected');
+                                // Marcamos esta fila
+                                $tr.addClass('selected');
+                                // Guardamos valores
+                                $('#selectedOrganismoId').val(data.idUR);
+                                $('#selectedOrganismoName').text(nombre);
+                            }
+                        });
+                    });
+                </script>
+            <?php endif ?>
 
         <?php else: ?>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <strong id='namePage'>Tablero de Eventos</strong>
+                </div>
+            </div>
+
             <!-- Sección adicional para eventos o contenido -->
             <div class="mt-4 events row">
                 <!-- Aquí puedes añadir contenido adicional o dinámico -->

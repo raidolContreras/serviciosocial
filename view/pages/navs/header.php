@@ -9,8 +9,8 @@ function setActiveClass($pageName, $currentPage)
 }
 ?>
 <!-- =======================
-     CSS ADICIONAL:
-     ======================= -->
+	 CSS ADICIONAL:
+	 ======================= -->
 <style>
 	/* Que upote cada <li> dentro de navbar-hidden con margen inferior */
 	.navbar-hidden {
@@ -62,6 +62,7 @@ function setActiveClass($pageName, $currentPage)
 					$role = 'Director de área';
 				} else {
 					$role = 'Estudiante';
+					$type = $_SESSION["user"]['type'];
 				}
 				?>
 				<div class="text-secondary small"><?php echo $role; ?></div>
@@ -77,7 +78,7 @@ function setActiveClass($pageName, $currentPage)
 		</ul>
 
 		<!-- OJO: Cambié “nav-item mt-5 navbar-hidden” por “navbar-nav flex-column mt-5 navbar-hidden”
-             para que Bootstrap trate la lista como un menú vertical y respete los <li> como tal. -->
+			 para que Bootstrap trate la lista como un menú vertical y respete los <li> como tal. -->
 		<ul class="navbar-nav flex-column mt-5 navbar-hidden">
 			<li>
 				<a href="./" class="menu-top p-2 mb-2 <?= setActiveClass('inicio', $pagina) ?>">

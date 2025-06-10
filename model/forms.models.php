@@ -628,7 +628,7 @@ class FormsModel
     static public function mdlSearchStudents($idStudent)
     {
         if ($idStudent == null) {
-            $sql = "SELECT * FROM student s LEFT JOIN courses c ON c.idCourse = s.idCourse LEFT JOIN degrees d ON d.idDegree = s.idDegree";
+            $sql = "SELECT * FROM student s LEFT JOIN courses c ON c.idCourse = s.idCourse LEFT JOIN degrees d ON d.idDegree = s.idDegree WHERE s.type = 'universidad'";
             $stmt = Conexion::conectar()->prepare($sql);
             $stmt->execute();
             $response = $stmt->fetchAll();
@@ -1508,6 +1508,19 @@ class SilModel
         $stmt->bindParam(":matricula", $matricula, PDO::PARAM_STR);
         $stmt->execute();
         $response = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+        return $response;
+    }
+}
+
+class ServicioModel {
+    static public function mdlGetOrganismos_receptores() {
+        $sql = "SELECT * FROM unidades_receptoras ORDER BY nameUR ASC";
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->execute();
+        $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt->closeCursor();
         $stmt = null;

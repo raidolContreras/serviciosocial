@@ -45,8 +45,8 @@ $roleLabel = $roleLabels[$_SESSION["user"]['role']] ?? 'Usuario';
                         </div>
                     </a>
                     <?php if ($role === 'admin'): ?>
-                        <div class="dropdown mt-3">
-                            <button class="btn mt-3 menu-top dropdown-toggle w-100 text-start" type="button"
+                        <div class="dropdown mt-1">
+                            <button class="btn menu-top dropdown-toggle w-100" type="button"
                                 id="adminMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-duotone fa-hands-helping me-2"></i> Servicio social
                             </button>
@@ -83,8 +83,8 @@ $roleLabel = $roleLabels[$_SESSION["user"]['role']] ?? 'Usuario';
                                 </li>
                             </ul>
                         </div>
-                        <div class="dropdown mt-3">
-                            <button class="btn mt-3 menu-top dropdown-toggle w-100 text-start" type="button"
+                        <div class="dropdown mt-1">
+                            <button class="btn menu-top dropdown-toggle w-100" type="button"
                                 id="internshipMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-duotone fa-briefcase me-2"></i> Prácticas profesionales
                             </button>

@@ -4,6 +4,11 @@ require_once "../forms.controller.php";
 
 if (isset($_POST['search'])) {
 
+    if ($_POST['search'] == 'organismos_receptores') {
+        $searchOrganismos = ServicioController::ctrGetOrganismos_receptores();
+        echo json_encode($searchOrganismos);
+    }
+
     if ($_POST['search'] == 'users') {
         $user = (isset($_POST['user'])) ? $_POST['user'] : null;
         $searchUsers = new FormsController();
