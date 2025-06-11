@@ -171,7 +171,7 @@ $html = <<<HTML
     </div>
 
     <div class="cuerpo">
-      Por este medio, se hace constar que <strong>{$studentName}</strong>, con número de control <strong>{$matricula}</strong>, de la <strong>{$degreeName}</strong> en esta Universidad, ha cumplido los requisitos para desarrollar el <strong>Servicio Social</strong> y es de su interés realizarlo en la institución que usted dignamente representa, considerando que debe cumplir <strong>480 horas</strong> en un periodo de <strong>6 meses</strong><br><br>
+      Por este medio, se hace constar que <strong>{$studentName}</strong>, con número de control <strong>{$matricula}</strong>, de la <strong>{$degreeName}</strong> en esta Universidad, ha cumplido los requisitos para desarrollar el <strong>Servicio Social</strong> y es de su interés realizarlo en la institución que usted dignamente representa, considerando que debe cumplir <strong>480 horas</strong> en un periodo de <strong>6 meses</strong>.<br><br>
       El Servicio Social debe ser desarrollado, conforme a lo establecido por el Organismo Público del Gobierno del Estado de Michoacán encargado de regularlo, actualmente denominado <strong>Instituto de la Juventud Michoacana</strong>, por tal motivo, se solicita por favor, sea emitida la <strong>Carta de Aceptación</strong> dirigida al <strong>Lic. Alejandro Cruz Ferreyra, Subdirector de Servicio Social y Pasantes</strong>, indicando el número de horas a cubrir mencionado en el párrafo anterior, así como la fecha de inicio y término.<br><br>
       Sin otro asunto en particular, agradezco de antemano la atención que se sirva brindar a nuestros alumnos, enviándole un cordial saludo.
     </div>

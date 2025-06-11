@@ -538,7 +538,25 @@ class FormsModel
     public static function mdlRegisterStudent($data)
     {
         try {
-            $stmt = Conexion::conectar()->prepare("INSERT INTO student(matricula, firstname, lastname, lastnameMom, idDegree, grado, email, phone, emergenci_phone, parent, type_lic, street, nInt, nExt, colony, cp, dayBirthday, monthBirthday, yearBirthday, gender, idCourse, type) VALUES (:matricula, :firstname, :lastname, :lastnameMom, :idDegree, :grado, :email, :phone, :emergenci_phone, :parent, :type_lic, :street, :nInt, :nExt, :colony, :cp, :dayBirthday, :monthBirthday, :yearBirthday, :gender, (SELECT idCourse FROM courses WHERE active = 1), :type)");
+            // 1) Abre UNA sola conexión PDO
+            $pdo = Conexion::conectar();
+
+            // 2) Prepara la consulta con esa misma conexión
+            $sql = "INSERT INTO student (
+                    matricula, firstname, lastname, lastnameMom, 
+                    idDegree, grado, email, phone, emergenci_phone, 
+                    parent, type_lic, street, nInt, nExt, colony, cp,
+                    dayBirthday, monthBirthday, yearBirthday, gender, 
+                    idCourse, type, accepted
+                ) VALUES (
+                    :matricula, :firstname, :lastname, :lastnameMom, 
+                    :idDegree, :grado, :email, :phone, :emergenci_phone, 
+                    :parent, :type_lic, :street, :nInt, :nExt, :colony, :cp,
+                    :dayBirthday, :monthBirthday, :yearBirthday, :gender, 
+                    (SELECT idCourse FROM courses WHERE active = 1),
+                    :type, :accepted
+                )";
+            $stmt = $pdo->prepare($sql);
 
             $stmt->bindParam(':matricula', $data['matricula'], PDO::PARAM_STR);
             $stmt->bindParam(':firstname', $data['nombre'], PDO::PARAM_STR);
@@ -561,25 +579,30 @@ class FormsModel
             $stmt->bindParam(':yearBirthday', $data['anioNacimiento'], PDO::PARAM_INT);
             $stmt->bindParam(':gender', $data['genero'], PDO::PARAM_INT);
             $stmt->bindParam(':type', $data['type'], PDO::PARAM_STR);
-            
-            if ($stmt->execute()) {
-                return "success";
-            } else {
-                print_r($stmt);
-            }
-        } catch (PDOException $e) {
-            if ($e->getCode() == 23000) { // Código de error para entrada duplicada
-                $response = "duplicate";
-            } else {
-                echo "Error: " . $e->getMessage(); // Imprimir el mensaje de error
-                $response = "error";
-            }
-        }
+            $accepted = ($data['type'] === 'universidad') ? 0 : 1;
+            $stmt->bindParam(':accepted', $accepted, PDO::PARAM_INT);
 
-        $stmt->closeCursor();
-        $stmt = null;
-        return $response;
+            // 4) Ejecuta
+            if (!$stmt->execute()) {
+                // Opcional: para depurar
+                throw new Exception("Error en execute(): " . implode(" | ", $stmt->errorInfo()));
+            }
+
+            // 5) Devuelve el ID recién generado sobre LA MISMA conexión
+            if ($data['type'] === 'universidad') {
+                return "success";
+            }
+
+            return $pdo->lastInsertId();
+
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                return "duplicate";
+            }
+            throw $e;  // o maneja el error como prefieras
+        }
     }
+
 
     public static function mdlEditStudent($data)
     {
@@ -1396,7 +1419,7 @@ function numeroATexto($numero)
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require  __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 function mdlSendEmail($recipientEmail, $message, $subject)
 {
@@ -1425,7 +1448,7 @@ function mdlSendEmail($recipientEmail, $message, $subject)
         // Contenido del correo
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body    = $message;
+        $mail->Body = $message;
         $mail->CharSet = 'UTF-8';
 
         // Enviar correo
@@ -1515,8 +1538,10 @@ class SilModel
     }
 }
 
-class ServicioModel {
-    static public function mdlGetOrganismos_receptores() {
+class ServicioModel
+{
+    static public function mdlGetOrganismos_receptores()
+    {
         $sql = "SELECT * FROM unidades_receptoras ORDER BY nameUR ASC";
         $stmt = Conexion::conectar()->prepare($sql);
         $stmt->execute();

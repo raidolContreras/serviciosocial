@@ -199,7 +199,26 @@ class FormsController
 
     static public function ctrRegisterStudent($data)
     {
-        return FormsModel::mdlRegisterStudent($data);
+        $register = FormsModel::mdlRegisterStudent($data);
+        if ($register == 'success') {
+            return $register;
+        } elseif ($register != 'duplicate' && $register != 'error') {
+            $password = (new self)->generateRandomPassword();
+            $cryptPass = password_hash($password, PASSWORD_DEFAULT);
+            $response = FormsModel::mdlAddPasswordStudent($cryptPass, $register);
+            if ($response == 'success') {
+                $sendMail = sendServiceSocialInfo($data["correoInstitucional"], $password);
+                if ($sendMail == 'ok') {
+                    return 'success';
+                } else {
+                    return 'error';
+                }
+            } else {
+                return 'error';
+            }
+        } else {
+            return 'duplicate';
+        }
     }
 
     static public function ctrEditStudent($data)
@@ -440,131 +459,139 @@ function sendPasswordToStudent($email, $password)
 
 }
 
-function sendServiceSocialInfo($email)
+function sendServiceSocialInfo($email, $password)
 {
     $subject = 'Servicio Social UNIMO - Información y formatos';
 
-    // Versión HTML del correo
-    $message = <<<'HTML'
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Servicio Social UNIMO</title>
-        <style>
-            body {
-                margin: 0;
-                padding: 0;
-                background-color: #F2F2F5;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-                color: #1C1C1E;
-            }
-            .container {
-                max-width: 600px;
-                margin: 40px auto;
-                background-color: #FFFFFF;
-                border-radius: 20px;
-                box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-                overflow: hidden;
-            }
-            .header {
-                background-color: #FFFFFF;
-                text-align: center;
-                padding: 30px 0 10px;
-            }
-            .header img {
-                width: 120px;
-                height: auto;
-            }
-            .content {
-                padding: 30px 30px 10px;
-                line-height: 1.6;
-                font-size: 16px;
-            }
-            .content h2 {
-                font-weight: 600;
-                margin-bottom: 20px;
-            }
-            .content p {
-                margin-bottom: 20px;
-            }
-            .button {
-                display: inline-block;
-                background-color:#efeffc;
-                color:#303030;
-                text-decoration: none;
-                padding: 14px 24px;
-                border-radius: 12px;
-                font-weight: 500;
-            }
-            .footer {
-                background-color:#efeffc;
-                padding: 20px 30px;
-                text-align: center;
-                font-size: 13px;
-                color: #6E6E73;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <div class="header">
-                <img src="https://infomontrer.unimontrer.edu.mx/assets/images/logo.png" alt="Logo UNIMO">
+    // Versión HTML del correo (HEREDOC para interpolar {$email} y {$password})
+    $message = <<<HTML
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Servicio Social UNIMO</title>
+            <style>
+                body {
+                    margin: 0;
+                    padding: 0;
+                    background-color: #F2F2F5;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                    color: #1C1C1E;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 40px auto;
+                    background-color: #FFFFFF;
+                    border-radius: 20px;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+                    overflow: hidden;
+                }
+                .header {
+                    background-color: #FFFFFF;
+                    text-align: center;
+                    padding: 30px 0 10px;
+                }
+                .header img {
+                    width: 120px;
+                    height: auto;
+                }
+                .content {
+                    padding: 30px 30px 10px;
+                    line-height: 1.6;
+                    font-size: 16px;
+                }
+                .content h2 {
+                    font-weight: 600;
+                    margin-bottom: 20px;
+                }
+                .content p {
+                    margin-bottom: 20px;
+                }
+                .button {
+                    display: inline-block;
+                    background-color: #efeffc;
+                    color: #303030;
+                    text-decoration: none;
+                    padding: 14px 24px;
+                    border-radius: 12px;
+                    font-weight: 500;
+                }
+                .footer {
+                    background-color: #efeffc;
+                    padding: 20px 30px;
+                    text-align: center;
+                    font-size: 13px;
+                    color: #6E6E73;
+                }
+                .info-box {
+                    display: inline-block;
+                    background: #f0f0f0;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-weight: 600;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <img src="https://infomontrer.unimontrer.edu.mx/assets/images/logo.png" alt="Logo UNIMO">
+                </div>
+                <div class="content">
+                    <h2>Buen día,</h2>
+                    <p>
+                        El Servicio Social UNIMO está regulado por el Instituto de la Juventud Michoacana, 
+                        ubicado en Periférico Paseo de la República 2451, C.P. 58290, Morelia, Mich. 
+                        Encuentra sus formatos y requisitos aquí:
+                    </p>
+                    <p>
+                        <a href="https://jovenes.michoacan.gob.mx/" target="_blank" class="button">
+                            Visitar Instituto
+                        </a>
+                    </p>
+                    <p>
+                        Asegúrate de ver si tu empresa, institución o dependencia cuenta con un Programa 
+                        de Servicio Social registrado y vigente antes de tu desarrollo.
+                    </p>
+                    <p>
+                        El Servicio Social debe realizarse después de acreditar las Prácticas Profesionales 
+                        y de haber concluido quinto semestre o sexto cuatrimestre (para licenciaturas 
+                        en salud, hasta finalizar estudios profesionales).
+                    </p>
+                    <p>
+                        Para emitir tu <strong>Carta de Presentación</strong>, ingresa con los siguientes datos:
+                    </p>
+                    <p>
+                        <a href="https://serviciosocial.unimontrer.edu.mx" target="_blank" class="button">
+                            Ingresar al sitio
+                        </a>
+                    </p>
+                    <p>
+                        <strong>Usuario (correo):</strong>
+                        <span class="info-box">{$email}</span><br>
+                        <strong>Contraseña:</strong>
+                        <span class="info-box">{$password}</span>
+                    </p>
+                    <p>
+                        <strong>Contacto adicional:</strong><br>
+                        Servicio Social Nutrición/Fisioterapia: 
+                        <a href="mailto:servicionutricion@unimontrer.edu.mx">servicionutricion@unimontrer.edu.mx</a><br>
+                        Prácticas Profesionales: 
+                        <a href="mailto:practicasprofesionales@unimontrer.edu.mx">practicasprofesionales@unimontrer.edu.mx</a>
+                    </p>
+                    <p style="color:#8E8E93; font-size:14px;">
+                        Nota: No envíes la misma solicitud más de una vez; se atienden en orden de llegada.
+                    </p>
+                    <p>Saludos,<br>Gracias por tu atención.</p>
+                </div>
+                <div class="footer">
+                    Universidad Montrer (UNIMO) • Av Lázaro Cárdenas 1760, Chapultepec Sur, 58260 Morelia, Mich. • Morelia, Michoacán
+                </div>
             </div>
-            <div class="content">
-                <h2>Buen día,</h2>
-                <p>
-                    El Servicio Social UNIMO está regulado por el Instituto de la Juventud Michoacana, 
-                    ubicado en Periférico Paseo de la República 2451, C.P. 58290, Morelia, Mich. 
-                    Encuentra sus formatos y requisitos aquí:
-                </p>
-                <p>
-                    <a href="https://jovenes.michoacan.gob.mx/" target="_blank" class="button">
-                        Visitar Instituto
-                    </a>
-                </p>
-                <p>
-                    Asegúrate de ver si tu empresa, institución o dependencia cuenta con un Programa 
-                    de Servicio Social registrado y vigente antes de tu desarrollo.
-                </p>
-                <p>
-                    El Servicio Social debe realizarse después de acreditar las Prácticas Profesionales 
-                    y de haber concluido quinto semestre o sexto cuatrimestre (para licenciaturas 
-                    en salud, hasta finalizar estudios profesionales).
-                </p>
-                <p>
-                    Para que emitamos tu <strong>Carta de Presentación</strong>, 
-                    envía desde tu correo institucional el archivo de Excel 
-                    <em>“DATOS PARA CARTA DE PRESENTACION DE SERVICIO SOCIAL UNIMO”</em> 
-                    con los campos naranjas completos (los amarillos son ejemplos). 
-                    Adjunta el archivo directamente; no envíes enlaces.
-                </p>
-                <p style="text-align:center;">
-                    <a href="https://drive.google.com/drive/folders/1WH0xGsYRAWKtxxFyHPoq2NqfRrO0oPQm?usp=drive_link" 
-                       target="_blank" class="button">
-                        Descargar Excel
-                    </a>
-                </p>
-                <p>
-                    <strong>Contacto adicional:</strong><br>
-                    Servicio Social Nutrición/Fisioterapia: 
-                    <a href="mailto:servicionutricion@unimontrer.edu.mx">servicionutricion@unimontrer.edu.mx</a><br>
-                    Prácticas Profesionales: 
-                    <a href="mailto:practicasprofesionales@unimontrer.edu.mx">practicasprofesionales@unimontrer.edu.mx</a>
-                </p>
-                <p style="color:#8E8E93; font-size:14px;">
-                    Nota: No envíes la misma solicitud más de una vez; se atienden en orden de llegada.
-                </p>
-                <p>Saludos,<br>Gracias por tu atención.</p>
-            </div>
-            <div class="footer">
-                Universidad Montrer (UNIMO) • Av. Ejemplo 123 • Morelia, Michoacán
-            </div>
-        </div>
-    </body>
-    </html>
-    HTML;
+        </body>
+        </html>
+        HTML;
 
-    // Versión plain-text del correo
+    // Versión plain-text
     $plainText = <<<TXT
         Buen día,
 
@@ -573,15 +600,9 @@ function sendServiceSocialInfo($email)
 
         Verifica que tu dependencia tenga Programa de Servicio Social registrado y vigente.
 
-        Debes completar las Prácticas Profesionales y haber concluido 5° semestre o 6° cuatrimestre 
-        (en salud, hasta finalizar tu carrera).
-
-        Para emitir tu Carta de Presentación de Servicio Social, envía desde tu correo institucional 
-        el Excel “DATOS PARA CARTA DE PRESENTACION DE SERVICIO SOCIAL UNIMO” con los campos naranjas completos. 
-        Adjunta el archivo; no enlaces.
-
-        Descarga el Excel:
-        https://drive.google.com/drive/folders/1WH0xGsYRAWKtxxFyHPoq2NqfRrO0oPQm?usp=drive_link
+        Debes completar las Prácticas Profesionales y haber concluido 5° semestre o 6° cuatrimestre.
+        Usuario: {$email}
+        Contraseña: {$password}
 
         Contacto:
         - Nutrición/Fisioterapia: servicionutricion@unimontrer.edu.mx
@@ -595,7 +616,7 @@ function sendServiceSocialInfo($email)
 
     $mail = new PHPMailer(true);
     try {
-        // Configuración del servidor SMTP
+        // Configuración SMTP
         $mail->isSMTP();
         $mail->Host = $_ENV['SMTP_HOST'];
         $mail->SMTPAuth = true;
@@ -604,7 +625,7 @@ function sendServiceSocialInfo($email)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = $_ENV['SMTP_PORT'];
 
-        // Codificación y remitente
+        // Remitente y destinatario
         $mail->CharSet = 'UTF-8';
         $mail->setFrom($_ENV['FROM_EMAIL'], $_ENV['FROM_NAME']);
         $mail->addAddress($email);
@@ -612,14 +633,13 @@ function sendServiceSocialInfo($email)
         // Contenido
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body    = $message;
+        $mail->Body = $message;
         $mail->AltBody = $plainText;
 
         $mail->send();
         return 'ok';
     } catch (Exception $e) {
         error_log("Error al enviar correo: {$mail->ErrorInfo}");
-        echo "Error al enviar correo: {$mail->ErrorInfo}";
         return false;
     }
 }
@@ -633,8 +653,10 @@ class SilController
     }
 }
 
-class ServicioController {
-    static public function ctrGetOrganismos_receptores() {
+class ServicioController
+{
+    static public function ctrGetOrganismos_receptores()
+    {
         return ServicioModel::mdlGetOrganismos_receptores();
     }
 }
