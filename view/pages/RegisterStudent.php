@@ -64,7 +64,7 @@
         </div>
 
         <div class="card">
-            <div class="card-header">Registro de Estudiante</div>
+            <div class="card-header">Registro de Estudiantes para Servicio Social Universitario</div>
             <div class="card-body">
                 <form id="registerStudentForm" class="needs-validation" novalidate>
                     <!-- Paso 1 -->
@@ -228,15 +228,15 @@
 
                     <!-- Paso 4 -->
                     <div class="step d-none" data-step="3">
-                        <h5>Paso 4: Tipo de Prácticas</h5>
+                        <h5>Paso 4: Elige la modalidad para realizar tu servicio social</h5>
                         <div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="tipoPractica" id="opcionUniv" value="universidad" required>
-                                <label class="form-check-label" for="opcionUniv">Directo con la Universidad</label>
+                                <label class="form-check-label" for="opcionUniv">A través de la Universidad (proyectos institucionales, eventos, etc.)</label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="tipoPractica" id="opcionEmp" value="empresa">
-                                <label class="form-check-label" for="opcionEmp">Con Empresa Foránea</label>
+                                <label class="form-check-label" for="opcionEmp">Unidad productiva (empresa, institución, organización, etc.)</label>
                             </div>
                             <div class="invalid-feedback">Selecciona una opción.</div>
                         </div>
