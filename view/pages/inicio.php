@@ -128,6 +128,10 @@
             font-size: 0.75rem;
         }
     }
+
+    td {
+        font-family: 'Roboto', Arial, sans-serif !important;
+    }
 </style>
 
 <div class="container-fluid card">
@@ -191,24 +195,31 @@
                     </table>
                 </div>
 
-                <!-- Para almacenar y mostrar la selección -->
-                <input type="hidden" id="selectedOrganismoId">
-                <p>Organismo seleccionado: <span id="selectedOrganismoName">Ninguno</span></p>
-
                 <script>
-                    $(document).ready(function () {
+                    $(document).ready(function() {
                         // Inicializa el DataTable vacío con columna de acción
                         let table = $('#tblOrganismosReceptores').DataTable({
-                            columns: [
-                                { data: 'idUR', title: 'ID' },
-                                { data: 'nameUR', title: 'Organismo Receptor' },
-                                { data: 'responsable', title: 'Responsable' },
-                                { data: 'domicilio', title: 'Domicilio' },
+                            columns: [{
+                                    data: 'idUR',
+                                    title: 'ID'
+                                },
+                                {
+                                    data: 'nameUR',
+                                    title: 'Organismo Receptor'
+                                },
+                                {
+                                    data: 'responsable',
+                                    title: 'Responsable'
+                                },
+                                {
+                                    data: 'domicilio',
+                                    title: 'Domicilio'
+                                },
                                 {
                                     data: null,
                                     title: 'Acción',
-                                    render: function () {
-                                        return '<button class="btn btn-sm btn-primary select-btn">Seleccionar</button>';
+                                    render: function(data, type, row) {
+                                        return `<button class="btn btn-sm btn-primary select-btn" data-id="${row.idUR}" data-name="${row.nameUR}" data-responsable="${row.responsable}" data-domicilio="${row.domicilio}">Seleccionar</button>`;
                                     }
                                 }
                             ],
@@ -223,12 +234,14 @@
                             $.ajax({
                                 url: 'controller/ajax/ajax.forms.php',
                                 type: 'POST',
-                                data: { search: 'organismos_receptores' },
+                                data: {
+                                    search: 'organismos_receptores'
+                                },
                                 dataType: 'json',
-                                success: function (response) {
+                                success: function(response) {
                                     table.clear().rows.add(response).draw();
                                 },
-                                error: function (xhr, status, error) {
+                                error: function(xhr, status, error) {
                                     console.error('Error al obtener organismos:', error);
                                 }
                             });
@@ -237,21 +250,49 @@
                         organismosReceptores();
 
                         // Manejo de click en botón Seleccionar
-                        $('#tblOrganismosReceptores tbody').on('click', '.select-btn', function () {
-                            let $tr = $(this).closest('tr');
-                            let data = table.row($tr).data();
-                            let nombre = data.nameUR;
+                        $('#tblOrganismosReceptores tbody').on('click', '.select-btn', function() {
+                            const id = $(this).data('id');
+                            const nombre = $(this).data('name');
+                            const responsable = $(this).data('responsable');
+                            const domicilio = $(this).data('domicilio');
 
-                            if (confirm(`¿Está seguro de elegir la unidad receptora:\n\n${nombre}?`)) {
-                                // Desmarcamos cualquier selección anterior
-                                table.$('tr.selected').removeClass('selected');
-                                // Marcamos esta fila
-                                $tr.addClass('selected');
-                                // Guardamos valores
-                                $('#selectedOrganismoId').val(data.idUR);
-                                $('#selectedOrganismoName').text(nombre);
+                            if (!confirm(`¿Está seguro de elegir la unidad receptora:\n\n${nombre}?`)) {
+                                return;
                             }
+
+                            // Creamos un formulario invisible para POST y apuntamos a una nueva pestaña
+                            const $form = $('<form>', {
+                                action: 'controller/ajax/generarCartaPresentacion.php',
+                                method: 'POST',
+                                target: '_blank'
+                            }).append(
+                                $('<input>', {
+                                    type: 'hidden',
+                                    name: 'idUR',
+                                    value: id
+                                }),
+                                $('<input>', {
+                                    type: 'hidden',
+                                    name: 'nameUR',
+                                    value: nombre
+                                }),
+                                $('<input>', {
+                                    type: 'hidden',
+                                    name: 'responsable',
+                                    value: responsable
+                                }),
+                                $('<input>', {
+                                    type: 'hidden',
+                                    name: 'domicilio',
+                                    value: domicilio
+                                })
+                            );
+
+                            $('body').append($form);
+                            $form.submit();
+                            $form.remove();
                         });
+
                     });
                 </script>
             <?php endif ?>
