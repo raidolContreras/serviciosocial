@@ -2,42 +2,23 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Empresas</title>
-    <!-- Bootstrap y FontAwesome -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Formulario de registro - Universidad Montrer</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .container {
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 15px;
-        }
-        .card {
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #dee2e6;
-        }
-        .card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            margin: 40px auto;
         }
         .card-header {
             background-color: #01643D;
             color: white;
-            border-radius: 15px 15px 0 0 !important;
-            border-bottom: 1px solid #dee2e6;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            text-align: center;
-            padding: 20px;
-        }
-        .card-body {
-            padding: 30px;
-            background-color: white;
         }
         .step {
             display: none;
@@ -45,110 +26,294 @@
         .step.active {
             display: block;
         }
-        .btn-primary:hover {
-            background-color: #1b4434;
-            border-color: #01643D;
+        .progress {
+            height: 25px;
+        }
+        .progress-bar {
+            background-color: #01643D;
+        }
+        .file-input {
+            margin-bottom: 1rem;
+        }
+        .required:after {
+            content: " *";
+            color: #dc3545;
+        }
+        .invalid-feedback {
+            display: none;
+        }
+        .form-control.is-invalid + .invalid-feedback {
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <div class="card-header">
-                Registro de Empresa
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-header text-center">Formulario de registro - Universidad Montrer</div>
+        <div class="card-body">
+            <!-- Progress bar -->
+            <div class="progress mb-4">
+                <div class="progress-bar" role="progressbar" style="width: 33%;" id="formProgress">Paso 1 de 3</div>
             </div>
-            <div class="card-body">
-                <form id="registerCompanyForm">
-                    <!-- Paso 1: Información General -->
-                    <div class="step active" id="step-1">
-                        <h4 class="mb-4">Paso 1: Información General</h4>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="empresa">Nombre de la Empresa</label>
-                                <input type="text" class="form-control" id="empresa" placeholder="Tech Solutions S.A." required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="rfc">RFC</label>
-                                <input type="text" class="form-control" id="rfc" placeholder="TSS850101XYZ" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="giro">Giro</label>
-                                <input type="text" class="form-control" id="giro" placeholder="Desarrollo de Software" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="website">Sitio Web</label>
-                                <input type="url" class="form-control" id="website" placeholder="https://www.empresa.com">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="num-empleados"># Empleados</label>
-                                <input type="number" class="form-control" id="num-empleados" min="1" placeholder="50">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="direccion-org">Dirección</label>
-                                <input type="text" class="form-control" id="direccion-org" placeholder="Calle, número, colonia, CP" required>
-                            </div>
+
+            <form id="evaluationForm" enctype="multipart/form-data" novalidate>
+                <!-- Paso 0: Aviso y documentos -->
+                <div class="step active" id="step-0">
+                    <h5 class="mb-3">Compromisos al llenar este formulario:</h5>
+                    <ul>
+                        <li>Asignar actividades relevantes para la formación académica del estudiante.</li>
+                        <li>Mantener un ambiente seguro y propicio para el aprendizaje.</li>
+                        <li>Respetar los horarios acordados con la Universidad Montrer.</li>
+                        <li>Facilitar la supervisión adecuada del estudiante.</li>
+                    </ul>
+                    <div class="form-group mt-4">
+                        <label class="font-weight-bold required">Tipo de Persona</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipoPersona" id="personaMoral" value="moral" required>
+                            <label class="form-check-label" for="personaMoral">Persona Moral</label>
                         </div>
-                        <button type="button" class="btn btn-primary next-step">Siguiente</button>
-                    </div>
-                    
-                    <!-- Paso 2: Contacto y Horario -->
-                    <div class="step" id="step-2">
-                        <h4 class="mb-4">Paso 2: Contacto y Horario</h4>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="contacto">Supervisor / Contacto</label>
-                                <input type="text" class="form-control" id="contacto" placeholder="Ing. María Gómez" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="email-org">Email de Contacto</label>
-                                <input type="email" class="form-control" id="email-org" placeholder="contacto@empresa.com" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="telefono-org">Teléfono de Contacto</label>
-                                <input type="tel" class="form-control" id="telefono-org" placeholder="(55) 9876 5432" required>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="horario-org">Horario de Atención</label>
-                                <input type="text" class="form-control" id="horario-org" placeholder="Lun-Vie 9:00–18:00">
-                            </div>
-                            <div class="form-group col-12">
-                                <label for="responsabilidades">Notas / Comentarios</label>
-                                <textarea class="form-control" id="responsabilidades" rows="3" placeholder="Responsabilidades o comentarios adicionales"></textarea>
-                            </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipoPersona" id="personaFisica" value="fisica" required>
+                            <label class="form-check-label" for="personaFisica">Persona Física</label>
                         </div>
-                        <button type="button" class="btn btn-secondary prev-step">Anterior</button>
-                        <button type="submit" class="btn btn-primary">Registrar Empresa</button>
+                        <div class="invalid-feedback">Seleccione el tipo de persona.</div>
                     </div>
-                </form>
-            </div>
+                    <div class="document-list mb-3" id="documentosRequeridos"></div>
+                    <button type="button" class="btn btn-primary float-right next-step" disabled id="btnNext0">Siguiente</button>
+                </div>
+
+                <!-- Paso 1: Información General -->
+                <div class="step" id="step-1">
+                    <h5 class="mb-3">Información General de la Empresa</h5>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="required">Nombre de la Empresa</label>
+                            <input type="text" class="form-control" name="empresa" placeholder="Ej. ACME S.A. de C.V." required>
+                            <div class="invalid-feedback">Ingrese el nombre de la empresa.</div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="required">Giro de la Empresa</label>
+                            <input type="text" class="form-control" name="giro" placeholder="Ej. Consultoría Educativa" required>
+                            <div class="invalid-feedback">Ingrese el giro de la empresa.</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label>Fecha de Constitución</label>
+                            <input type="date" class="form-control" name="fecha_constitucion">
+                            <small>Opcional</small>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label>Página Web</label>
+                            <input type="url" class="form-control" name="web" placeholder="https://">
+                            <small>Incluya el protocolo (http:// o https://)</small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-8">
+                            <label class="required">Calle y Número</label>
+                            <input type="text" class="form-control" name="calle" placeholder="Ej. Av. Reforma 123" required>
+                            <div class="invalid-feedback">Ingrese la dirección completa.</div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label class="required">Código Postal</label>
+                            <input type="text" class="form-control" name="cp" placeholder="Ej. 01234" required pattern="[0-9]{5}">
+                            <div class="invalid-feedback">Ingrese un código postal válido de 5 dígitos.</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="required">Colonia</label>
+                            <input type="text" class="form-control" name="colonia" placeholder="Ej. Centro" required>
+                            <div class="invalid-feedback">Ingrese la colonia.</div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="required">Ciudad</label>
+                            <input type="text" class="form-control" name="ciudad" placeholder="Ej. Ciudad de México" required>
+                            <div class="invalid-feedback">Ingrese la ciudad.</div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary prev-step">Anterior</button>
+                    <button type="button" class="btn btn-primary float-right next-step">Siguiente</button>
+                </div>
+
+                <!-- Paso 2: Contacto -->
+                <div class="step" id="step-2">
+                    <h5 class="mb-3">Información de Contacto</h5>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="required">Teléfono(s) de Contacto</label>
+                            <input type="tel" class="form-control" name="telefonos" placeholder="Ej. 55 1234 5678" required>
+                            <div class="invalid-feedback">Ingrese al menos un teléfono de contacto.</div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="required">Correo Electrónico</label>
+                            <input type="email" class="form-control" name="email" placeholder="ejemplo@dominio.com" required>
+                            <div class="invalid-feedback">Ingrese un correo válido.</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label class="required">Nombre del Contacto</label>
+                            <input type="text" class="form-control" name="nombre_contacto" placeholder="Ej. Juan Pérez" required>
+                            <div class="invalid-feedback">Ingrese el nombre del contacto.</div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Celular</label>
+                            <input type="tel" class="form-control" name="celular" placeholder="Ej. 55 8765 4321">
+                            <small>Opcional</small>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Nombre del Representante Legal</label>
+                            <input type="text" class="form-control" name="rep_legal" placeholder="Opcional">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Cargo del Representante Legal</label>
+                            <input type="text" class="form-control" name="cargo_legal" placeholder="Opcional">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label>Correo del Representante Legal</label>
+                            <input type="email" class="form-control" name="email_legal" placeholder="Opcional">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Teléfono Oficina</label>
+                            <input type="tel" class="form-control" name="tel_oficina" placeholder="Opcional">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="required">Actividades Propuestas para Estudiantes</label>
+                        <textarea class="form-control" name="actividades" rows="3" placeholder="Describa las actividades" required></textarea>
+                        <div class="invalid-feedback">Describa las actividades propuestas.</div>
+                    </div>
+                    <button type="button" class="btn btn-secondary prev-step">Anterior</button>
+                    <button type="submit" class="btn btn-success float-right">Enviar Formulario</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <!-- JS -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(function() {
-            let currentStep = 0;
-            const steps = $('.step');
-            function showStep(index) {
-                steps.removeClass('active').eq(index).addClass('active');
-            }
-            $('.next-step').click(() => {
-                if (currentStep < steps.length - 1) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(function () {
+        let currentStep = 0;
+        const steps = $('.step');
+        const totalSteps = steps.length;
+        const documentos = {
+            moral: [
+                "Acta Constitutiva (PDF)",
+                "Constancia de Situación Fiscal (PDF)",
+                "Comprobante de domicilio (Vigencia no mayor a 2 meses)"
+            ],
+            fisica: [
+                "Constancia de Situación Fiscal (PDF)",
+                "Comprobante de domicilio (Vigencia no mayor a 2 meses)"
+            ]
+        };
+
+        function showStep(index) {
+            steps.removeClass('active').eq(index).addClass('active');
+            const percent = Math.round(((index + 1) / totalSteps) * 100);
+            $('#formProgress')
+                .css('width', percent + '%')
+                .text(`Paso ${index + 1} de ${totalSteps}`);
+        }
+
+        function updateDocumentos(tipo) {
+            const list = documentos[tipo] || [];
+            const container = $('#documentosRequeridos');
+            container.empty();
+            list.forEach(doc => {
+                const key = doc.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+                container.append(
+                    `<div class="file-input">
+                        <label class="required" for="${key}">${doc}</label>
+                        <input type="file" class="form-control" name="docs[${key}]" id="${key}" accept=".pdf,.jpg,.png" required>
+                        <div class="invalid-feedback">Por favor adjunte ${doc}.</div>
+                    </div>`
+                );
             });
-            $('.prev-step').click(() => {
-                if (currentStep > 0) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
-            showStep(currentStep);
+            $('#btnNext0').prop('disabled', false);
+        }
+
+        $('input[name="tipoPersona"]').change(function () {
+            updateDocumentos(this.value);
         });
-    </script>
+
+        function validateStep(step) {
+            let valid = true;
+            const fields = $(`#step-${step}`).find('input, select, textarea');
+            fields.each(function () {
+                if (!this.checkValidity()) {
+                    $(this).addClass('is-invalid');
+                    valid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            return valid;
+        }
+
+        $('.next-step').click(function () {
+            if (!validateStep(currentStep)) {
+                return;
+            }
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        $('.prev-step').click(function () {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        $('#evaluationForm').on('submit', function (e) {
+            if (!validateStep(currentStep)) {
+                e.preventDefault();
+                return;
+            }
+            e.preventDefault();
+            const form = this;
+            const formData = new FormData(form);
+            $.ajax({
+                url: 'controller/ajax/ajax.registroOrganismos.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        alert('¡Formulario enviado correctamente! Revisaremos la información proporcionada y se le notificará el resultado vía correo electrónico.');
+                        form.reset();
+                        currentStep = 0;
+                        showStep(currentStep);
+                        $('#btnNext0').prop('disabled', true);
+                        $('#documentosRequeridos').empty();
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                    alert('Ocurrió un error al enviar el formulario.');
+                }
+            });
+        });
+
+        showStep(currentStep);
+    });
+</script>
 </body>
 </html>

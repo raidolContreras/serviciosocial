@@ -15529,7 +15529,7 @@ body {
 }
 
 .dt-orderable-none {
-  padding: 1px !important;
+  background-color: #01643D !important;
 }
 
 .btn-custom.btn-invitados .fa-chevron-right {
@@ -16122,3 +16122,68 @@ header {
   border-radius: 10px 10px 10px 10px;
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
+
+.badge-success {
+  background-color: #01643D !important;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-danger {
+  background-color: #D80000 !important;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-warning {
+  background-color: #f0ad4e !important;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-info {
+  background-color: #5bc0de !important;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-primary {
+  background-color: #0275d8 !important;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-secondary {
+  background-color: #6c757d !important;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-light {
+  background-color: #f8f9fa !important;
+  color: #000 !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.badge-dark {
+  background-color: #343a40 !important;
+  color: #fff !important;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+

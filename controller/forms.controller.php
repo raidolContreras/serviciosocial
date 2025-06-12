@@ -660,3 +660,9 @@ class ServicioController
         return ServicioModel::mdlGetOrganismos_receptores();
     }
 }
+
+class PracticasController {
+    static public function ctrGetExternals() {
+        return PracticasModel::mdlGetExternals($idexternal = null);
+    }
+}

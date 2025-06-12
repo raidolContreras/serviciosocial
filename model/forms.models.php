@@ -1552,3 +1552,87 @@ class ServicioModel
         return $response;
     }
 }
+
+class PracticasModel
+{
+    static public function saveOrganismoExterno($data)
+    {
+        try {
+            $db = Conexion::conectar();
+            $sql = "
+                INSERT INTO organismos_externos
+                    (tipo_persona, empresa, giro, fecha_constitucion, web,
+                     calle, cp, colonia, ciudad, telefonos,
+                     email, nombre_contacto, celular, rep_legal,
+                     cargo_legal, email_legal, tel_oficina, actividades)
+                VALUES
+                    (:tipoPersona, :empresa, :giro, :fecha_constitucion, :web,
+                     :calle, :cp, :colonia, :ciudad, :telefonos,
+                     :email, :nombre_contacto, :celular, :rep_legal,
+                     :cargo_legal, :email_legal, :tel_oficina, :actividades)
+            ";
+            $stmt = $db->prepare($sql);
+            // Vincular todos los parámetros
+            $stmt->bindValue(':tipoPersona', $data['tipoPersona'], PDO::PARAM_STR);
+            $stmt->bindValue(':empresa', $data['empresa'], PDO::PARAM_STR);
+            $stmt->bindValue(':giro', $data['giro'], PDO::PARAM_STR);
+            $stmt->bindValue(':fecha_constitucion', $data['fecha_constitucion'], PDO::PARAM_STR);
+            $stmt->bindValue(':web', $data['web'], PDO::PARAM_STR);
+            $stmt->bindValue(':calle', $data['calle'], PDO::PARAM_STR);
+            $stmt->bindValue(':cp', $data['cp'], PDO::PARAM_STR);
+            $stmt->bindValue(':colonia', $data['colonia'], PDO::PARAM_STR);
+            $stmt->bindValue(':ciudad', $data['ciudad'], PDO::PARAM_STR);
+            $stmt->bindValue(':telefonos', $data['telefonos'], PDO::PARAM_STR);
+            $stmt->bindValue(':email', $data['email'], PDO::PARAM_STR);
+            $stmt->bindValue(':nombre_contacto', $data['nombre_contacto'], PDO::PARAM_STR);
+            $stmt->bindValue(':celular', $data['celular'], PDO::PARAM_STR);
+            $stmt->bindValue(':rep_legal', $data['rep_legal'], PDO::PARAM_STR);
+            $stmt->bindValue(':cargo_legal', $data['cargo_legal'], PDO::PARAM_STR);
+            $stmt->bindValue(':email_legal', $data['email_legal'], PDO::PARAM_STR);
+            $stmt->bindValue(':tel_oficina', $data['tel_oficina'], PDO::PARAM_STR);
+            $stmt->bindValue(':actividades', $data['actividades'], PDO::PARAM_STR);
+
+            $stmt->execute();
+            $newId = $db->lastInsertId();
+
+            return [
+                'success' => true,
+                'id' => (int) $newId,
+                'message' => null
+            ];
+
+        } catch (PDOException $e) {
+            return [
+                'success' => false,
+                'id' => null,
+                'message' => 'Error BD: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    static public function mdlGetExternals($idExternal = null)
+    {
+        $conexion = Conexion::conectar();
+
+        if ($idExternal === null) {
+            // Obtener todos los organismos activos
+            $sql = "SELECT * FROM organismos_externos WHERE isActive = 1";
+            $stmt = $conexion->prepare($sql);
+            $stmt->execute();
+            $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            // Obtener uno por ID
+            $sql = "SELECT * FROM organismos_externos WHERE isActive = 1 AND id = :id";
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(":id", $idExternal, PDO::PARAM_INT);
+            $stmt->execute();
+            $response = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+}
