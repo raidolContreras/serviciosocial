@@ -60,6 +60,8 @@ function setActiveClass($pageName, $currentPage)
 					$role = 'Administrador';
 				} else if ($_SESSION["user"]['role'] == 'teacher') {
 					$role = 'Director de área';
+				} else if ($_SESSION["user"]['role'] == 'organismo_externo') {
+					$role = 'Organismo externo';
 				} else {
 					$role = 'Estudiante';
 					$type = $_SESSION["user"]['type'];

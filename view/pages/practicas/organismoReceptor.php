@@ -233,7 +233,7 @@ $rememberChecked = !empty($cookieMail);
                     <button type="submit" class="btn-login">Iniciar sesión</button>
 
                     <div class="register-link">
-                        ¿No tienes cuenta? <a href="inscripcionPracticas" target="_blank">Regístrate aquí</a>
+                        ¿No tienes cuenta? <a href="inscripcionEmpresas" target="_blank">Regístrate aquí</a>
                     </div>
                 </form>
             </div>

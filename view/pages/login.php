@@ -262,9 +262,17 @@ $rememberChecked = !empty($cookieMail);
                     </div>
                     <button type="submit" class="btn-login">Iniciar sesión</button>
 
-                    <center style="margin-top: 1rem; font-size: 0.9rem; color: #555; text-align: center;"></ce>
+                    <!-- texto “¿No tienes cuenta?” -->
+                    <center style="margin-top: 1rem; font-size: 0.9rem; color: #555; text-align: center;">
                         ¿No tienes cuenta?
                     </center>
+
+                    <!-- aquí añadimos el enlace a inicio de sesión de organismo externo -->
+                    <p class="external-login-link" style="text-align:center; margin-top:0.5rem; font-size:0.9rem;">
+                        o <a href="OrganismoReceptor" style="color: var(--accent-blue); text-decoration:none;">
+                        inicia sesión como organismo externo
+                        </a>
+                    </p>
 
                     <!-- SELECT UN SOLO CONTROL -->
                     <div class="register-select">
@@ -274,6 +282,7 @@ $rememberChecked = !empty($cookieMail);
                             <option value="inscripcionPracticas">Prácticas Profesionales</option>
                         </select>
                     </div>
+
                 </form>
             </div>
         </div>

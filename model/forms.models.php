@@ -1721,4 +1721,18 @@ class PracticasModel
         return $response;
     }
 
+    static public function mdlShowOrganismoReceptor($table, $item, $value) {
+        $conexion = Conexion::conectar();
+        $sql = "SELECT * FROM $table WHERE $item = :$item AND isActive = 1";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":$item", $value, PDO::PARAM_STR);
+        $stmt->execute();
+        $response = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
 }

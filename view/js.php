@@ -47,12 +47,18 @@
         $('.navbar-toggler').removeClass('active');
     }
 
-    function logout() {
+    function logout(type = '') {
         $.ajax({
             type: 'POST',
             url: 'controller/ajax/logout.php',
             success: function(response) {
-                window.location.href = 'login';
+                if (type === 'externo') {
+                    // Si es un organismo externo, redirigimos a la página de login
+                    window.location.href = 'OrganismoReceptor';
+                } else {
+                    // Para otros roles, redirigimos a la página de login
+                    window.location.href = 'login';
+                }
             },
             error: function(xhr, status, error) {
                 console.error('Error al cerrar sesión:', error);

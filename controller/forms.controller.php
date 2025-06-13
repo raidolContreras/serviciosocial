@@ -342,6 +342,26 @@ class PracticasController
     {
         return PracticasModel::mdlDisableExternal($id);
     }
+
+    static public function ctrLoginOrganismoReceptor()
+    {
+        if (isset($_POST["email"]) && isset($_POST["password"])) {
+            $table = "organismos_externos";
+            $item = "email";
+            $value = $_POST["email"];
+            $response = PracticasModel::mdlShowOrganismoReceptor($table, $item, $value);
+            if ($response && password_verify($_POST["password"], $response["password"])) {
+                session_start();
+                $_SESSION["logged"] = true;
+                unset($response["password"]);
+                $_SESSION["user"] = $response;
+                $_SESSION["user"]['role'] = 'organismo_externo';
+                echo 'success';
+            } else {
+                echo 'error Contraseña o correo incorrecto';
+            }
+        }
+    } 
 }
 
 function generateRandomPassword($length = 10)
