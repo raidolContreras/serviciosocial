@@ -200,7 +200,7 @@ $(document).ready(function() {
                 data = { id: id };
             }
             $.post(url, data, function(res){
-                if (res.success) {
+                if (res) {
                     table.ajax.reload(null, false);
                 } else {
                     alert('Error: ' + res.error);

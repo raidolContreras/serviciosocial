@@ -26,7 +26,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="confirmationModalLabel">Confirmar acción</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -34,7 +34,7 @@
                     ¿Estás seguro?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" id="confirmBtn" class="btn btn-primary">Aceptar</button>
                 </div>
             </div>
@@ -46,7 +46,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="editExternalModalLabel">Editar Organismo Externo</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -68,19 +68,11 @@
               <label for="editEmail">Email</label>
               <input type="email" class="form-control" id="editEmail" name="email" required>
             </div>
-            <div class="form-group col-md-6">
-              <label for="editEstado">Estado</label>
-              <select class="form-control" id="editEstado" name="isActive">
-                <option value="1">Activo</option>
-                <option value="0">Inactivo</option>
-              </select>
-            </div>
           </div>
-          <!-- Si necesitas más campos, añádelos aquí -->
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
         <button type="button" id="saveEditBtn" class="btn btn-primary">Guardar cambios</button>
       </div>
     </div>

@@ -1551,6 +1551,52 @@ class ServicioModel
         $stmt = null;
         return $response;
     }
+
+    public static function generateFolio(int $studentId): string
+    {
+        $pdo  = Conexion::conectar();
+        $year = date('Y');
+
+        // 1) Buscar si ya existe un folio para este estudiante en el año actual
+        $sql = "SELECT code FROM cartas_servicio_social WHERE student_id = :student_id AND YEAR(created_at) = :year LIMIT 1";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':student_id' => $studentId,
+            ':year' => $year
+        ]);
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existing && !empty($existing['code'])) {
+            return $existing['code'];
+        }
+
+        // 2) Obtener el mayor número de folio para el año actual
+        $sql = "
+            SELECT MAX(
+                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(code, '-', 2), '-', -1) AS UNSIGNED)
+            ) AS max_num
+            FROM cartas_servicio_social
+            WHERE YEAR(created_at) = :year
+        ";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':year' => $year]);
+        $maxNum = (int) $stmt->fetch(PDO::FETCH_ASSOC)['max_num'];
+
+        // 3) Incrementar y formatear
+        $nextNum = $maxNum + 1;
+        $folio   = sprintf('DSS-%03d-%s', $nextNum, $year);
+
+        // 4) Insertar el folio
+        $insert = "INSERT INTO cartas_servicio_social (code, student_id) VALUES (:code, :student_id)";
+        $stmt   = $pdo->prepare($insert);
+        $stmt->execute([
+            ':code'       => $folio,
+            ':student_id' => $studentId
+        ]);
+
+        return $folio;
+    }
+
 }
 
 class PracticasModel
@@ -1629,6 +1675,46 @@ class PracticasModel
             $response = $stmt->fetch(PDO::FETCH_ASSOC);
         }
 
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+    static public function mdlAcceptExternal($id) {
+        $conexion = Conexion::conectar();
+        $sql = "UPDATE organismos_externos SET isAcepted = 1 WHERE id = :id";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $response = $stmt->rowCount() > 0 ? true : false;
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+    static public function mdlDisableExternal($id) {
+        $conexion = Conexion::conectar();
+        $sql = "UPDATE organismos_externos SET isActive = 0 WHERE id = :id";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $response = $stmt->rowCount() > 0 ? true : false;
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+    static public function mdlAddPasswordExternal($cryptPass, $id) {
+        $conexion = Conexion::conectar();
+        $sql = "UPDATE organismos_externos SET password = :password WHERE id = :id";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":password", $cryptPass, PDO::PARAM_STR);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $response = $stmt->rowCount() > 0 ? true : false;
         $stmt->closeCursor();
         $stmt = null;
 

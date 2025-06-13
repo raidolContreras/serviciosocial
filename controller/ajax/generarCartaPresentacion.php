@@ -18,14 +18,27 @@ $studentName = strtoupper(trim("{$user['firstname']} {$user['lastname']} {$user[
 $matricula   = $user['matricula'];
 $genero      = $user['gender'] == 1 ? 'el' : 'la';
 $degree = FormsModel::mdlSearchDegrees($user['idDegree']);
-$degreeName  = 'LICENCIATURA EN '. strtoupper($degree['nameDegree'] ?? 'DESCONOCIDA');
+$degreeName  = 'LICENCIATURA EN ' . strtoupper($degree['nameDegree'] ?? 'DESCONOCIDA');
 
 // 2) Fecha en español
 $meses = [
-    'enero','febrero','marzo','abril','mayo','junio',
-    'julio','agosto','septiembre','octubre','noviembre','diciembre'
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre'
 ];
 $fecha = date('j') . ' de ' . $meses[date('n') - 1] . ' de ' . date('Y');
+
+// Generar folio único para la carta
+$folio = ServicioModel::generateFolio($user['idStudent']);
 
 // 3) Generar el HTML con sello superpuesto
 $html = <<<HTML
@@ -158,7 +171,7 @@ $html = <<<HTML
         <td class="header-right">
           <div class="fecha">Morelia, Michoacán, México, a {$fecha}.</div>
           <div class="asunto">Asunto: <strong>Carta de Presentación de Servicio Social</strong></div>
-          <div class="asunto"><strong>DSS-101-2025</strong></div>
+          <div class="asunto"><strong>{$folio}</strong></div>
         </td>
       </tr>
     </table>
@@ -212,6 +225,6 @@ $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 $dompdf->stream("CartaPresentacion_{$matricula}.pdf", [
-    "Attachment" => false
+  "Attachment" => false
 ]);
 exit;
