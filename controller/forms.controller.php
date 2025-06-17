@@ -361,7 +361,22 @@ class PracticasController
                 echo 'error Contraseña o correo incorrecto';
             }
         }
-    } 
+    }
+
+    static public function solicitarPracticas($data) {
+        $response = PracticasModel::mdlSolicitarPracticas($data);
+        return $response;
+    }
+
+    static public function getSolicitudesPracticas($organismo_externo_id) {
+        $response = PracticasModel::mdlGetSolicitudesPracticas($organismo_externo_id);
+        return $response;
+    }
+    
+    static public function deleteSolicitudPractica($idSolicitud) {
+        $response = PracticasModel::mdlDeleteSolicitudPractica($idSolicitud);
+        return $response;
+    }
 }
 
 function generateRandomPassword($length = 10)

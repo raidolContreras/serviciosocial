@@ -33,20 +33,11 @@
         letter-spacing: 0.05rem;
     }
 
-    /* Tarjeta general */
-    .card {
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        background-color: #fff;
-        margin-bottom: 15px;
-        padding: 15px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
 
     /* Estilo de la tarjeta de puntos totales */
     .card-body {
         padding: 10px;
-        text-align: center;
+        /* text-align: center; */
     }
 
     .card-subtitle {
@@ -133,8 +124,8 @@
     }
 </style>
 
-<div class="container-fluid card">
-    <div class="row float-right">
+<div class="container-fluid">
+    <div class="row float-right card">
         <?php if ($role == 'Estudiante'): ?>
 
             <?php

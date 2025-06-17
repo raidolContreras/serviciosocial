@@ -1554,7 +1554,7 @@ class ServicioModel
 
     public static function generateFolio(int $studentId): string
     {
-        $pdo  = Conexion::conectar();
+        $pdo = Conexion::conectar();
         $year = date('Y');
 
         // 1) Buscar si ya existe un folio para este estudiante en el año actual
@@ -1584,13 +1584,13 @@ class ServicioModel
 
         // 3) Incrementar y formatear
         $nextNum = $maxNum + 1;
-        $folio   = sprintf('DSS-%03d-%s', $nextNum, $year);
+        $folio = sprintf('DSS-%03d-%s', $nextNum, $year);
 
         // 4) Insertar el folio
         $insert = "INSERT INTO cartas_servicio_social (code, student_id) VALUES (:code, :student_id)";
-        $stmt   = $pdo->prepare($insert);
+        $stmt = $pdo->prepare($insert);
         $stmt->execute([
-            ':code'       => $folio,
+            ':code' => $folio,
             ':student_id' => $studentId
         ]);
 
@@ -1681,7 +1681,8 @@ class PracticasModel
         return $response;
     }
 
-    static public function mdlAcceptExternal($id) {
+    static public function mdlAcceptExternal($id)
+    {
         $conexion = Conexion::conectar();
         $sql = "UPDATE organismos_externos SET isAcepted = 1 WHERE id = :id";
         $stmt = $conexion->prepare($sql);
@@ -1694,7 +1695,8 @@ class PracticasModel
         return $response;
     }
 
-    static public function mdlDisableExternal($id) {
+    static public function mdlDisableExternal($id)
+    {
         $conexion = Conexion::conectar();
         $sql = "UPDATE organismos_externos SET isActive = 0 WHERE id = :id";
         $stmt = $conexion->prepare($sql);
@@ -1707,7 +1709,8 @@ class PracticasModel
         return $response;
     }
 
-    static public function mdlAddPasswordExternal($cryptPass, $id) {
+    static public function mdlAddPasswordExternal($cryptPass, $id)
+    {
         $conexion = Conexion::conectar();
         $sql = "UPDATE organismos_externos SET password = :password WHERE id = :id";
         $stmt = $conexion->prepare($sql);
@@ -1721,7 +1724,8 @@ class PracticasModel
         return $response;
     }
 
-    static public function mdlShowOrganismoReceptor($table, $item, $value) {
+    static public function mdlShowOrganismoReceptor($table, $item, $value)
+    {
         $conexion = Conexion::conectar();
         $sql = "SELECT * FROM $table WHERE $item = :$item AND isActive = 1";
         $stmt = $conexion->prepare($sql);
@@ -1729,6 +1733,129 @@ class PracticasModel
         $stmt->execute();
         $response = $stmt->fetch(PDO::FETCH_ASSOC);
 
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+    static public function mdlSolicitarPracticas($data)
+    {
+        $conexion = Conexion::conectar();
+
+        $sql = "
+            INSERT INTO solicitudes_practicantes (
+                organismo_externo_id,
+                licenciatura,
+                num_practicantes,
+                actividades,
+                ofrece_apoyo_economico,
+                monto_apoyo,
+                fecha_limite,
+                modalidad,
+                dia_inicio,
+                dia_fin,
+                hora_inicio,
+                hora_fin,
+                capacidades,
+                direccion_practica,
+                nombre_responsable,
+                telefono
+            ) VALUES (
+                :organismo_externo_id,
+                :licenciatura,
+                :numPract,
+                :actividades,
+                :apoyoEconomico,
+                :montoApoyo,
+                :fechaLimite,
+                :modalidad,
+                :diaInicio,
+                :diaFin,
+                :horaInicio,
+                :horaFin,
+                :capacidades,
+                :direccionPractica,
+                :nombreResponsable,
+                :contactoResponsable
+            )
+        ";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":organismo_externo_id", $data['organismo_externo_id'], PDO::PARAM_INT);
+        $stmt->bindParam(":licenciatura", $data['licenciatura'], PDO::PARAM_STR);
+        $stmt->bindParam(":numPract", $data['numPract'], PDO::PARAM_INT);
+        $stmt->bindParam(":actividades", $data['actividades'], PDO::PARAM_STR);
+        $stmt->bindParam(":apoyoEconomico", $data['apoyoEconomico'], PDO::PARAM_INT);
+        $stmt->bindParam(":montoApoyo", $data['montoApoyo'], PDO::PARAM_STR);
+        $stmt->bindParam(":fechaLimite", $data['fechaLimite'], PDO::PARAM_STR);
+        $stmt->bindParam(":modalidad", $data['modalidad'], PDO::PARAM_STR);
+        $stmt->bindParam(":diaInicio", $data['diaInicio'], PDO::PARAM_STR);
+        $stmt->bindParam(":diaFin", $data['diaFin'], PDO::PARAM_STR);
+        $stmt->bindParam(":horaInicio", $data['horaInicio'], PDO::PARAM_STR);
+        $stmt->bindParam(":horaFin", $data['horaFin'], PDO::PARAM_STR);
+        $stmt->bindParam(":capacidades", $data['capacidades'], PDO::PARAM_STR);
+        $stmt->bindParam(":direccionPractica", $data['direccionPractica'], PDO::PARAM_STR);
+        $stmt->bindParam(":nombreResponsable", $data['nombreResponsable'], PDO::PARAM_STR);
+        $stmt->bindParam(":contactoResponsable", $data['contactoResponsable'], PDO::PARAM_STR);
+
+        if ($stmt->execute()) {
+            $lastId = $conexion->lastInsertId();
+            $response = [
+                'success' => true,
+                'id' => (int) $lastId,
+                'message' => null
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'id' => null,
+                'message' => 'Error al registrar la solicitud de prácticas.'
+            ];
+        }
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+    static public function mdlGetSolicitudesPracticas($organismo_externo_id) {
+        $conexion = Conexion::conectar();
+        $sql = "
+            SELECT sp.*, oe.empresa, oe.giro, oe.web, oe.ciudad
+            FROM solicitudes_practicantes sp
+            JOIN organismos_externos oe ON sp.organismo_externo_id = oe.id
+            WHERE sp.organismo_externo_id = :organismo_externo_id AND sp.activo = 1
+            ORDER BY sp.fecha_limite DESC
+        ";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":organismo_externo_id", $organismo_externo_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $response = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+    static public function mdlDeleteSolicitudPractica($idSolicitud) {
+        $conexion = Conexion::conectar();
+        $sql = "UPDATE solicitudes_practicantes SET activo = 0 WHERE id = :idSolicitud";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":idSolicitud", $idSolicitud, PDO::PARAM_INT);
+        if ($stmt->execute()) {
+            $response = [
+                'success' => true,
+                'message' => null
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'message' => 'Error al eliminar la solicitud de prácticas.'
+            ];
+        }
+        
         $stmt->closeCursor();
         $stmt = null;
 
