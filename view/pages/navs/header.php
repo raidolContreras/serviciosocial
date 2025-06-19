@@ -138,3 +138,6 @@ function setActiveClass($pageName, $currentPage)
 		</ul>
 	</div>
 </header>
+<?php
+require_once 'view/pages/navs/notifications.php';
+?>

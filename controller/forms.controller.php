@@ -365,6 +365,17 @@ class PracticasController
 
     static public function solicitarPracticas($data) {
         $response = PracticasModel::mdlSolicitarPracticas($data);
+        if ($response['success']) {
+            Notifications::addNotification(
+                11, // recipient_id (replace with actual admin ID if needed)
+                'admin', // recipient_type
+                'Nueva solicitud de prácticas recibida.', // message
+                'solicitudes_practicas', // url
+                null, // data
+                2, // notification_type
+                2 // priority
+            );
+        }
         return $response;
     }
 
@@ -375,6 +386,16 @@ class PracticasController
     
     static public function deleteSolicitudPractica($idSolicitud) {
         $response = PracticasModel::mdlDeleteSolicitudPractica($idSolicitud);
+        return $response;
+    }
+
+    static public function getSolicitudPracticaById($idSolicitud) {
+        $response = PracticasModel::mdlGetSolicitudPracticaById($idSolicitud);
+        return $response;
+    }
+
+    static public function updateSolicitudPractica($data) {
+        $response = PracticasModel::mdlUpdateSolicitudPractica($data);
         return $response;
     }
 }

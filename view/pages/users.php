@@ -1,5 +1,5 @@
+<h2>Usuarios Registrados</h2>
 <div class="container">
-    <h2>Usuarios Registrados</h2>
     <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#registerUserModal">Registrar Usuario Nuevo</button>
     <div class="table-responsive">
         <table id="usersTable" class="table table-striped table-bordered">

@@ -1819,7 +1819,8 @@ class PracticasModel
         return $response;
     }
 
-    static public function mdlGetSolicitudesPracticas($organismo_externo_id) {
+    static public function mdlGetSolicitudesPracticas($organismo_externo_id)
+    {
         $conexion = Conexion::conectar();
         $sql = "
             SELECT sp.*, oe.empresa, oe.giro, oe.web, oe.ciudad
@@ -1839,7 +1840,8 @@ class PracticasModel
         return $response;
     }
 
-    static public function mdlDeleteSolicitudPractica($idSolicitud) {
+    static public function mdlDeleteSolicitudPractica($idSolicitud)
+    {
         $conexion = Conexion::conectar();
         $sql = "UPDATE solicitudes_practicantes SET activo = 0 WHERE id = :idSolicitud";
         $stmt = $conexion->prepare($sql);
@@ -1855,11 +1857,174 @@ class PracticasModel
                 'message' => 'Error al eliminar la solicitud de prácticas.'
             ];
         }
-        
+
         $stmt->closeCursor();
         $stmt = null;
 
         return $response;
     }
 
+    static public function mdlGetSolicitudPracticaById($idSolicitud)
+    {
+        $conexion = Conexion::conectar();
+        $sql = "
+            SELECT sp.*
+            FROM solicitudes_practicantes sp
+            WHERE sp.id = :idSolicitud AND sp.activo = 1
+        ";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":idSolicitud", $idSolicitud, PDO::PARAM_INT);
+        $stmt->execute();
+        $response = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+    static public function mdlUpdateSolicitudPractica($data)
+    {
+        $conexion = Conexion::conectar();
+        $sql = "
+            UPDATE solicitudes_practicantes
+            SET 
+                licenciatura = :licenciatura,
+                num_practicantes = :numPract,
+                actividades = :actividades,
+                ofrece_apoyo_economico = :apoyoEconomico,
+                monto_apoyo = :montoApoyo,
+                fecha_limite = :fechaLimite,
+                modalidad = :modalidad,
+                dia_inicio = :diaInicio,
+                dia_fin = :diaFin,
+                hora_inicio = :horaInicio,
+                hora_fin = :horaFin,
+                capacidades = :capacidades,
+                direccion_practica = :direccionPractica,
+                nombre_responsable = :nombreResponsable,
+                telefono = :contactoResponsable
+            WHERE id = :idSolicitud
+        ";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(":licenciatura", $data['licenciatura'], PDO::PARAM_STR);
+        $stmt->bindParam(":numPract", $data['numPract'], PDO::PARAM_INT);
+        $stmt->bindParam(":actividades", $data['actividades'], PDO::PARAM_STR);
+        $stmt->bindParam(":apoyoEconomico", $data['apoyoEconomico'], PDO::PARAM_INT);
+        $stmt->bindParam(":montoApoyo", $data['montoApoyo'], PDO::PARAM_STR);
+        $stmt->bindParam(":fechaLimite", $data['fechaLimite'], PDO::PARAM_STR);
+        $stmt->bindParam(":modalidad", $data['modalidad'], PDO::PARAM_STR);
+        $stmt->bindParam(":diaInicio", $data['diaInicio'], PDO::PARAM_STR);
+        $stmt->bindParam(":diaFin", $data['diaFin'], PDO::PARAM_STR);
+        $stmt->bindParam(":horaInicio", $data['horaInicio'], PDO::PARAM_STR);
+        $stmt->bindParam(":horaFin", $data['horaFin'], PDO::PARAM_STR);
+        $stmt->bindParam(":capacidades", $data['capacidades'], PDO::PARAM_STR);
+        $stmt->bindParam(":direccionPractica", $data['direccionPractica'], PDO::PARAM_STR);
+        $stmt->bindParam(":nombreResponsable", $data['nombreResponsable'], PDO::PARAM_STR);
+        $stmt->bindParam(":contactoResponsable", $data['contactoResponsable'], PDO::PARAM_STR);
+        $stmt->bindParam(":idSolicitud", $data['idSolicitud'], PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            $response = [
+                'success' => true,
+                'message' => $data['licenciatura']
+            ];
+        } else {
+            $response = [
+                'success' => false,
+                'message' => 'Error al actualizar la solicitud de prácticas.'
+            ];
+        }
+
+        $stmt->closeCursor();
+        $stmt = null;
+
+        return $response;
+    }
+
+}
+
+class Notifications
+{
+    static public function addNotification($recipient_id, $recipient_type, $message, $url = null, $data = null, $notification_type = null, $priority = 1)
+    {
+        $pdo = Conexion::conectar();
+        $sql = "INSERT INTO notifications 
+        (recipient_id, recipient_type, message, url, data, notification_type, priority, is_read, created_at) 
+        VALUES 
+        (:recipient_id, :recipient_type, :message, :url, :data, :notification_type, :priority, 0, NOW())";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':recipient_id', $recipient_id, PDO::PARAM_INT);
+        $stmt->bindParam(':recipient_type', $recipient_type, PDO::PARAM_STR);
+        $stmt->bindParam(':message', $message, PDO::PARAM_STR);
+        $stmt->bindParam(':url', $url, PDO::PARAM_STR);
+        $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+        $stmt->bindParam(':notification_type', $notification_type, PDO::PARAM_STR);
+        $stmt->bindParam(':priority', $priority, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    static public function getNotifications($recipient_id, $recipient_type, $limit = 10)
+    {
+        $pdo = Conexion::conectar();
+        $sql = "SELECT * FROM notifications 
+        WHERE recipient_id = :recipient_id AND recipient_type = :recipient_type 
+        ORDER BY created_at DESC LIMIT :limit";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':recipient_id', $recipient_id, PDO::PARAM_INT);
+        $stmt->bindParam(':recipient_type', $recipient_type, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    static public function markAsRead($notification_id)
+    {
+        $pdo = Conexion::conectar();
+        $sql = "UPDATE notifications SET is_read = 1 WHERE id = :notification_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':notification_id', $notification_id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    static public function deleteNotification($notification_id)
+    {
+        $pdo = Conexion::conectar();
+        $sql = "DELETE FROM notifications WHERE id = :notification_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':notification_id', $notification_id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+    static public function getUnreadCount($recipient_id, $recipient_type)
+    {
+        $pdo = Conexion::conectar();
+        $sql = "SELECT COUNT(*) as unread_count FROM notifications 
+        WHERE recipient_id = :recipient_id AND recipient_type = :recipient_type AND is_read = 0";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':recipient_id', $recipient_id, PDO::PARAM_INT);
+        $stmt->bindParam(':recipient_type', $recipient_type, PDO::PARAM_STR);
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
+
+    static public function getNotificationById($notification_id)
+    {
+        $pdo = Conexion::conectar();
+        $sql = "SELECT * FROM notifications WHERE id = :notification_id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':notification_id', $notification_id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    static public function deleteAllNotifications($recipient_id, $recipient_type)
+    {
+        $pdo = Conexion::conectar();
+        $sql = "DELETE FROM notifications WHERE recipient_id = :recipient_id AND recipient_type = :recipient_type";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':recipient_id', $recipient_id, PDO::PARAM_INT);
+        $stmt->bindParam(':recipient_type', $recipient_type, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
 }

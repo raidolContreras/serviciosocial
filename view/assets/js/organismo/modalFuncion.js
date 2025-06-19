@@ -299,44 +299,40 @@ function solicitudes() {
                     <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Empresa</dt><dd class="col-sm-8">${
-                            item.empresa || "–"
+                          item.empresa || "–"
                         }</dd>
                         <dt class="col-sm-4">Giro</dt><dd class="col-sm-8">${
-                            item.giro || "–"
+                          item.giro || "–"
                         }</dd>
                         <dt class="col-sm-4">Ciudad</dt><dd class="col-sm-8">${
-                            item.ciudad || "–"
+                          item.ciudad || "–"
                         }</dd>
                         <dt class="col-sm-4">Dirección</dt><dd class="col-sm-8">${
-                            item.direccion_practica || "–"
+                          item.direccion_practica || "–"
                         }</dd>
                         
                         <dt class="col-sm-4">Responsable</dt>
                         <dd class="col-sm-8">
                         ${item.nombre_responsable}<br>
                         <small><i class="fas fa-phone-alt"></i> ${
-                            item.telefono
+                          item.telefono
                         }</small>
                         </dd>
 
                         <dt class="col-sm-4"># Practicantes</dt>
-                        <dd class="col-sm-8">${
-                            item.num_practicantes
-                        }</dd>
+                        <dd class="col-sm-8">${item.num_practicantes}</dd>
 
                         <dt class="col-sm-4">Actividades</dt>
                         <dd class="col-sm-8">${item.actividades}</dd>
 
                         <dt class="col-sm-4">Capacidades</dt>
-                        <dd class="col-sm-8">${
-                            item.capacidades || "–"
-                        }</dd>
+                        <dd class="col-sm-8">${item.capacidades || "–"}</dd>
 
                         <dt class="col-sm-4">Horario</dt><dd class="col-sm-8">${horario}</dd>
 
                         <dt class="col-sm-4">Apoyo Económico</dt>
                         <dd class="col-sm-8">${
-                            item.ofrece_apoyo_economico == 1 ? "Sí" : "No"
+                          item.ofrece_apoyo_economico == 1 ? "Sí" : "No"
                         }</dd>
                         ${apoyo}
 
@@ -345,11 +341,11 @@ function solicitudes() {
                     </dl>
                     </div>
                     <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-                        <small>Creado: ${item.created_at}</small>
+                        <small>Creado: ${formatFecha(item.created_at)}</small>
                         <div>
                             <span class="badge ${badgeClass}">${badgeText}</span>
                             <span class="badge bg-secondary">${
-                                item.modalidad
+                              item.modalidad
                             }</span>
                         </div>
                     </div>
@@ -367,9 +363,100 @@ function solicitudes() {
 // Maneja eventos de edición y eliminación de solicitudes
 $(document).on("click", ".edit-solicitud", function () {
   const id = $(this).data("id");
-  // Aquí puedes implementar la lógica para editar la solicitud
-  // Por ejemplo, abrir un modal con el formulario prellenado
-  console.log("Editar solicitud ID:", id);
+  // Abrir modal de edición y cargar datos
+  $.ajax({
+    method: "POST",
+    url: "controller/organismo/forms.php",
+    data: { action: "getSolicitudById", id },
+    dataType: "json",
+    success: function (data) {
+      if (!data || !data.id) {
+        alert("No se pudo cargar la solicitud.");
+        return;
+      }
+      // Rellena los campos del formulario de edición
+      $("#editarIdSolicitud").val(data.id);
+      $("#editarLicenciatura").val(data.licenciatura);
+      $("#editarNumPract").val(data.num_practicantes);
+      $("#editarActividades").val(data.actividades);
+      $("#editarApoyoEconomico").val(data.ofrece_apoyo_economico == 1 ? "Sí" : "No").trigger("change");
+      if (data.ofrece_apoyo_economico == 1) {
+        $("#editarGrupoMonto").show();
+        $("#editarMontoApoyo").val(data.monto_apoyo);
+        $("#editarMontoApoyo").prop("required", true);
+      } else {
+        $("#editarGrupoMonto").hide();
+        $("#editarMontoApoyo").val("");
+        $("#editarMontoApoyo").prop("required", false);
+      }
+      $("#editarFechaLimite").val(data.fecha_limite);
+      $("#editarModalidad").val(data.modalidad);
+      $("#editarDiaInicio").val(data.dia_inicio);
+      $("#editarDiaFin").val(data.dia_fin);
+      $("#editarHoraInicio").val(data.hora_inicio.slice(0,5));
+      $("#editarHoraFin").val(data.hora_fin.slice(0,5));
+      $("#editarCapacidades").val(data.capacidades);
+      $("#editarDireccionPractica").val(data.direccion_practica);
+      $("#editarNombreResponsable").val(data.nombre_responsable);
+      $("#editarContactoResponsable").val(data.telefono);
+
+      // Mostrar el modal
+      $("#editarPractModal").modal("show");
+
+      // Asignar evento de envío del formulario de edición con id editarForm
+      $("#editarForm").off("submit").on("submit", function (e) {
+        e.preventDefault(); // evita envío normal
+
+        const $form = $(this);
+        const url = "controller/organismo/forms.php";
+        const method = $form.attr("method");
+
+        // Recolecta datos
+        let formData = new FormData(this);
+        formData.append("action", "updateSolicitud"); // agrega acción al FormData
+
+        $.ajax({
+          url: url,
+          type: method.toUpperCase(),
+          data: formData,
+          contentType: false,
+          processData: false,
+          dataType: "json",
+          beforeSend: function () {
+            // opcional: deshabilitar botón para evitar doble envío
+            $form
+              .find('button[type="submit"]')
+              .prop("disabled", true)
+              .text("Actualizando...");
+          },
+          success: function (response) {
+            if (response.success) {
+              alert("Solicitud actualizada correctamente.");
+              $("#editarPractModal").modal("hide");
+              solicitudes(); // recarga las solicitudes
+            } else {
+              alert("Error: " + (response.message || "Ocurrió un problema."));
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error(error);
+            alert("Error al actualizar la solicitud. Intenta de nuevo.");
+          },
+          complete: function () {
+            // vuelve a habilitar el botón
+            $form
+              .find('button[type="submit"]')
+              .prop("disabled", false)
+              .text("Actualizar Solicitud");
+          },
+        });
+      });
+
+    },
+    error: function () {
+      alert("Error al cargar la solicitud.");
+    }
+  });
 });
 
 $(document).on("click", ".delete-solicitud", function () {
@@ -395,3 +482,38 @@ $(document).on("click", ".delete-solicitud", function () {
     });
   }
 });
+
+// Formatea la fecha de creación
+function formatFecha(fechaStr) {
+  if (!fechaStr) return "–";
+  const meses = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
+  const [fecha, hora] = fechaStr.split(" ");
+  if (!fecha || !hora) return fechaStr;
+  const [anio, mes, dia] = fecha.split("-");
+  let [hh, mm] = hora.split(":");
+  let ampm = "am";
+  let h = parseInt(hh, 10);
+  if (h === 0) {
+    h = 12;
+  } else if (h >= 12) {
+    ampm = "pm";
+    if (h > 12) h -= 12;
+  }
+  return `${parseInt(dia, 10)}/${
+    meses[parseInt(mes, 10) - 1]
+  }/${anio} ${h}:${mm} ${ampm}`;
+}
+
