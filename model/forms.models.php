@@ -1076,6 +1076,17 @@ class FormsModel
         $stmt = null;
         return $response;
     }
+
+    static public function mdlGetNoAceptedStudents() {
+        $sql = "SELECT * FROM student WHERE accepted = 0 AND status = 1 AND type = 'universidad' ORDER BY firstname ASC";
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->execute();
+        $response = $stmt->fetchAll();
+
+        $stmt->closeCursor();
+        $stmt = null;
+        return $response;
+    }
 }
 
 

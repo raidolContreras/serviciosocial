@@ -77,7 +77,11 @@ if (isset($_POST['search'])) {
         $searchStudents = new FormsController();
         if (isset($_POST['action'])) {
 
-            if ($_POST['action'] == 'acceptStudent') {
+            if ($_POST['action'] == 'noaceptedStudents') {
+
+                $students = $searchStudents->ctrGetNoAceptedStudents();
+                
+            } elseif ($_POST['action'] == 'acceptStudent') {
 
                 $students = $searchStudents->ctrAcceptStudent($_POST['idStudent']);
 

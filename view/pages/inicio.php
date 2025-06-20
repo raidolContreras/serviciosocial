@@ -1,3 +1,6 @@
+<?php
+$role = $_SESSION['user']['role'] ?? '';
+?>
 <style>
     :root {
         --page-bg: #f2f5f5;
@@ -36,7 +39,7 @@
 
     /* Estilo de la tarjeta de puntos totales */
     .card-body {
-        padding: 10px;
+        padding: 20px;
         /* text-align: center; */
     }
 
@@ -125,9 +128,8 @@
 </style>
 
 <div class="container-fluid">
-    <div class="row float-right card">
-        <?php if ($role == 'Estudiante'): ?>
-
+    <?php if ($role == 'student'): ?>
+        <div class="row float-right">
             <?php
             if ($type == 'universidad'):
                 // Tablero de Eventos para Estudiantes de Universidad
@@ -139,11 +141,18 @@
             ?>
 
         <?php elseif ($role == 'Organismo externo'):
-            require_once 'view/pages/practicas/dashboardOrganismo.php';
-        else:
-            // Vista genérica para otros roles
-            require_once 'view/pages/servicio/dashboardAdministrador.php';
-            include 'view/pages/modals/dashboardModal.php';
-        endif ?>
+        require_once 'view/pages/practicas/dashboardOrganismo.php';
+    elseif ($role == 'teacher'):
+        // Tablero de Eventos para Profesores
+        require_once 'view/pages/servicio/dashboardProfesor.php';
+        include 'view/pages/modals/dashboardModal.php';
+    else:
+        echo "<div class='row float-right'>";
+        // Vista genérica para otros roles
+        require_once 'view/pages/servicio/dashboardAdministrador.php';
+        include 'view/pages/modals/dashboardModal.php';
+
+        require_once 'view/pages/navs/notifications.php';
+    endif ?>
     </div>
 </div>

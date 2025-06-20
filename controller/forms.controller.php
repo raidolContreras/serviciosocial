@@ -154,8 +154,8 @@ class FormsController
             if ($response == 'success') {
                 $searchStudent = FormsModel::mdlSearchStudents($student);
                 if ($searchStudent) {
-                    $sendMail = sendPasswordToStudent($searchStudent["email"], $password);
-                    echo $sendMail;
+                    sendPasswordToStudent($searchStudent["email"], $password);
+                    echo $response;
                 }
             }
         }
@@ -288,6 +288,11 @@ class FormsController
     static public function ctrDeleteDegree($idDegree)
     {
         return FormsModel::mdlDeleteDegree($idDegree);
+    }
+
+    static public function ctrGetNoAceptedStudents()
+    {
+        return FormsModel::mdlGetNoAceptedStudents();
     }
 }
 

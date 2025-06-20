@@ -55,7 +55,7 @@ function includeAuthPages($pagina)
 {
     $role = $_SESSION['user']['role'] ?? '';
     if ($role === 'admin') {
-        $whitelist = ['inicio', 'users', 'events', 'event_types', 'students', 'register_event', 'courses', 'areas', 'degrees', 'internship_companies'];
+        $whitelist = ['inicio','users','events','event_types','students','register_event','courses','areas','degrees','internship_companies','practice_solicitud','internship_students','internship_events'];
     } elseif ($role === 'teacher') {
         $whitelist = ['inicio', 'students'];
     } else {
